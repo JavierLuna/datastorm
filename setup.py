@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='dittostore',
-    version='0.0.2',
+    version='0.0.3',
     description='Simple and easy to use ODM for Google Datastore',
     url='https://github.com/OrbitalAds/dittostore',
     author='OrbitalAds',
