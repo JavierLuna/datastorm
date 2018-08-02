@@ -135,6 +135,11 @@ class BaseEntity:
         entity_dict = {attr: getattr(self, attr) for attr in fields_to_store}
         self.__raw_entity.update(entity_dict)
 
+    def delete(self):
+        """Delete the object from Datastore."""
+        client = datastore.Client(project=self.__project__)
+        client.delete(self.__raw_entity.key)
+
     @classmethod
     def generate_key(cls, identifier: str, parent_key: Optional[Key] = None):
         return datastore.Client(project=cls.__project__).key(cls.__kind__, identifier, parent=parent_key)
