@@ -120,6 +120,7 @@ class BaseEntity:
         self.__raw_entity = _raw_entity
         self.__default_excludes = {attr for attr in dir(BaseEntity)}
         [setattr(self, name, value) for name, value in kwargs.items()]
+        self._save_offline()
 
     def save(self, exclude_from_indexes: tuple = ()):
         client = datastore.Client(project=self.__project__)
