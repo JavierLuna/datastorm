@@ -1,0 +1,33 @@
+version: '3.0'
+
+services:
+
+  unittests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - tests-net
+    volumes:
+     - .:/usr/src/tests
+    environment:
+      DATASTORE_EMULATOR_HOST: datastore:8081
+      DATASTORE_PROJECT_ID: tests
+
+    restart: always
+
+    depends_on:
+       - "datastore"
+    command: ["bash", "wait_for_postgres.sh", "postgres2", "54322", "python3", "-m", "unittest"]
+
+  datastore:
+    image: singularities/datastore-emulator
+    environment:
+      - DATASTORE_PROJECT_ID=tests
+      - DATASTORE_LISTEN_ADDRESS=0.0.0.0:8081
+    ports:
+      - "8081:8081"
+
+networks:
+    tests:
+        name: tests-net
