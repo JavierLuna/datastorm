@@ -1,4 +1,5 @@
 import datetime
+import json
 from typing import Union, Optional
 
 from google.cloud import datastore
@@ -46,7 +47,7 @@ class QueryBuilder:
         self.__entity_class = entity_class
         self.__project = entity_class.__project__
         self.__kind = entity_class.__kind__
-        self.__filters = []
+        self.__filters = entity_class.__base_filters__ or []
         self.__order = []
 
     def filter(self, filter: Query):
@@ -80,16 +81,18 @@ class QueryBuilder:
         cursor = None
         while True:
             query_iter = query.fetch(start_cursor=cursor, limit=page_size)
-            page = list(next(query_iter.pages))
-            for raw_entity in page:
+            for raw_entity in query_iter:
                 yield self.__entity_class(raw_entity.key, _raw_entity=raw_entity, **raw_entity)
             cursor = query_iter.next_page_token
-            if not page:
+            if not cursor:
                 break
 
     def first(self):
-        result = list(self.all(page_size=1))
-        return result.pop() if result else None
+        try:
+            result = next(self.all(page_size=1))
+        except TypeError:
+            result = None
+        return result
 
     def __repr__(self):
         return "< QueryBuilder filters: {}, ordered by: {}>".format(self.__filters or "No filters",
@@ -109,8 +112,9 @@ class AbstractDSEntity(type):
 class BaseEntity:
     __kind__ = None
     __project__ = None
+    __base_filters__ = []
     __exclude__ = []
-    __allowed_types__ = [str, int, float, bool, datetime.datetime]
+    __allowed_types__ = [str, int, float, bool, datetime.datetime, dict, list]
 
     def __init__(self, key: Union[Key, str], _kind: Optional[str] = None, _project: Optional[str] = None,
                  _raw_entity: Optional[Entity] = None, **kwargs):
@@ -119,7 +123,8 @@ class BaseEntity:
         self.__project__ = _project or self.__project__
         self.__raw_entity = _raw_entity
         self.__default_excludes = {attr for attr in dir(BaseEntity)}
-        [setattr(self, name, value) for name, value in kwargs.items()]
+        [setattr(self, name, self._autouncast(name, value)) for name, value in kwargs.items()]
+        self._save_offline()
 
     def save(self, exclude_from_indexes: tuple = ()):
         client = datastore.Client(project=self.__project__)
@@ -131,9 +136,30 @@ class BaseEntity:
         self.__raw_entity = self.__raw_entity or datastore.Entity(key=self.key,
                                                                   exclude_from_indexes=exclude_from_indexes)
         fields_to_store = {attr for attr in dir(self) if
-                           type(getattr(self, attr)) in self.__allowed_types__} - self.__default_excludes
-        entity_dict = {attr: getattr(self, attr) for attr in fields_to_store}
+                           type(getattr(self, attr)) in self.__allowed_types__ and not attr.startswith("_")} - self.__default_excludes
+        entity_dict = {attr: self._autocast(getattr(self, attr)) for attr in fields_to_store}
         self.__raw_entity.update(entity_dict)
+
+    def _autocast(self, value):
+        if type(value) in [list, dict]:
+            try:
+                return json.dumps(value, sort_keys=True)
+            except:
+                pass
+        return value
+
+    def _autouncast(self, property, value):
+        if hasattr(self, property) and type(getattr(self, property)) in [dict, list]:
+            try:
+                return json.loads(value)
+            except:
+                pass
+        return value
+
+    def delete(self):
+        """Delete the object from Datastore."""
+        client = datastore.Client(project=self.__project__)
+        client.delete(self.__raw_entity.key)
 
     @classmethod
     def generate_key(cls, identifier: str, parent_key: Optional[Key] = None):

@@ -7,12 +7,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='dittostore',
-    version='0.0.2',
+    version='0.0.7',
     description='Simple and easy to use ODM for Google Datastore',
     url='https://github.com/OrbitalAds/dittostore',
     author='OrbitalAds',
     author_email='dev@orbitalads.io',
-    install_requires=['google-cloud'],
+    install_requires=['google-cloud-datastore'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
