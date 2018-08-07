@@ -47,7 +47,7 @@ class QueryBuilder:
         self.__entity_class = entity_class
         self.__project = entity_class.__project__
         self.__kind = entity_class.__kind__
-        self.__filters = []
+        self.__filters = entity_class.__base_filters__ or []
         self.__order = []
 
     def filter(self, filter: Query):
@@ -112,6 +112,7 @@ class AbstractDSEntity(type):
 class BaseEntity:
     __kind__ = None
     __project__ = None
+    __base_filters__ = []
     __exclude__ = []
     __allowed_types__ = [str, int, float, bool, datetime.datetime, dict, list]
 
@@ -135,7 +136,7 @@ class BaseEntity:
         self.__raw_entity = self.__raw_entity or datastore.Entity(key=self.key,
                                                                   exclude_from_indexes=exclude_from_indexes)
         fields_to_store = {attr for attr in dir(self) if
-                           type(getattr(self, attr)) in self.__allowed_types__} - self.__default_excludes
+                           type(getattr(self, attr)) in self.__allowed_types__ and not attr.startswith("_")} - self.__default_excludes
         entity_dict = {attr: self._autocast(getattr(self, attr)) for attr in fields_to_store}
         self.__raw_entity.update(entity_dict)
 
