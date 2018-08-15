@@ -18,7 +18,7 @@ services:
 
     depends_on:
        - "datastore"
-    command: ["bash", "wait_for_postgres.sh", "postgres2", "54322", "python3", "-m", "unittest"]
+    command: ["python3", "-m", "unittest"]
 
   datastore:
     image: singularities/datastore-emulator
