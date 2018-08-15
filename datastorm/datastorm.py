@@ -3,10 +3,10 @@ from typing import List
 from google.cloud import datastore
 from google.cloud.datastore import Key
 
-from dittostore.objects import BaseEntity, AbstractDSEntity
+from datastorm.objects import BaseEntity, AbstractDSEntity
 
 
-class DittoStore:
+class DataStorm:
 
     def __init__(self, project):
         self.project = project
