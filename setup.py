@@ -1,17 +1,12 @@
-"""A setuptools based setup module.
-See:
-https://packaging.python.org/en/latest/distributing.html
-https://github.com/pypa/sampleproject
-"""
 from setuptools import setup, find_packages
 
 setup(
-    name='dittostore',
-    version='0.0.7',
+    name='datastorm',
+    version='0.0.0a1',
     description='Simple and easy to use ODM for Google Datastore',
-    url='https://github.com/OrbitalAds/dittostore',
-    author='OrbitalAds',
-    author_email='dev@orbitalads.io',
+    url='https://github.com/JavierLuna/datastorm',
+    author='Javier Luna Molina',
+    author_email='jlunadevel@gmail.com',
     install_requires=['google-cloud-datastore'],
     classifiers=[
         'Development Status :: 3 - Alpha',

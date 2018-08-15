@@ -5,8 +5,11 @@ name = "pypi"
 
 [packages]
 google-cloud-datastore = "*"
+twine = "*"
 
 [dev-packages]
+twine = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.6"

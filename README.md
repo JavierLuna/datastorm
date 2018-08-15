@@ -1,8 +1,8 @@
-# Dittostore
+# Datastorm
 
 ## What is it?
 
-**Dittostore** is an attempt to make your datastore experience painless.
+**Datastorm** is an attempt to make your datastore experience painless.
 
 How am I going to do that? I'll show you!
 
@@ -12,15 +12,15 @@ How am I going to do that? I'll show you!
 ### Connect to DataStore
 
 ```python
-from dittostore.dittostore import DittoStore
+from datastorm.datastorm import DataStorm
 
-dittostore = DittoStore("example-gcloud-project")
+datastorm = DataStorm("example-gcloud-project")
 ```
 
 ### Define an entity
 
 ```python
-class EntityName(dittostore.DSEntity): 
+class EntityName(datastorm.DSEntity): 
     __kind__ = "EntityName"
 ```
 
@@ -53,14 +53,16 @@ e.save()
 
 ### Batch create/update entities
 ```python
-dittostore.save_multi(entity_list)
+datastorm.save_multi(entity_list)
 ```
 
 ## Install
 ```bash
-pip install dittostore
+pip install datastorm
 ```
 
 ## Disclaimer
 
 Proper tests and a decent documentation will roll in a few days.
+
+Fork from [OrbitalAds/dittostore](https://github.com/OrbitalAds/dittostore), which I also created.

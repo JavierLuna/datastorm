@@ -64,7 +64,8 @@ class QueryBuilder:
         client = datastore.Client(project=self.__project)
         key = key or client.key(self.__kind, identifier)
         raw_entity = client.get(key)
-        return self.__entity_class(key, _raw_entity=raw_entity, **raw_entity)
+
+        return None if raw_entity is None else self.__entity_class(key, _raw_entity=raw_entity, **raw_entity)
 
     def all(self, page_size: int = 500, parent_key: Union[Key, str] = None):
         client = datastore.Client(project=self.__project)
