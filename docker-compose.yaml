@@ -1,25 +1,6 @@
 version: '3.0'
 
 services:
-
-  unittests:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    networks:
-      - tests-net
-    volumes:
-     - .:/usr/src/tests
-    environment:
-      DATASTORE_EMULATOR_HOST: datastore:8081
-      DATASTORE_PROJECT_ID: tests
-
-    restart: always
-
-    depends_on:
-       - "datastore"
-    command: ["python3", "-m", "unittest"]
-
   datastore:
     image: singularities/datastore-emulator
     environment:
@@ -29,5 +10,4 @@ services:
       - "8081:8081"
 
 networks:
-    tests:
-        name: tests-net
+    tests-net:
