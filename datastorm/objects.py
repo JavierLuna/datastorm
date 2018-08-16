@@ -67,10 +67,7 @@ class QueryBuilder:
 
         return None if raw_entity is None else self.__entity_class(key, _raw_entity=raw_entity, **raw_entity)
 
-    def all(self, page_size: int = 500, parent_key: Union[Key, str] = None):
-
-        if parent_key is not None and type(parent_key) is str:
-            parent_key = self.__client.key(self.__kind, parent_key)
+    def all(self, page_size: int = 500, parent_key: Key = None):
 
         query = self.__client.query(kind=self.__kind, ancestor=parent_key)
         [query.add_filter(filter.item, filter.op, filter.value) for filter in self.__filters]
@@ -93,9 +90,9 @@ class QueryBuilder:
         result = None
         try:
             result = next(self.all(page_size=1))
-        except TypeError:
+        except TypeError:  # pragma: no cover
             pass
-        except StopIteration:
+        except StopIteration:  # pragma: no cover
             pass
 
         return result
