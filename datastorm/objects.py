@@ -27,7 +27,7 @@ class FilterField:
         return Query(self.field_name, ">=", other)
 
     def __repr__(self):
-        return self.field_name
+        return self.field_name  # pragma: no cover
 
 
 class Query:
@@ -38,7 +38,7 @@ class Query:
         self.value = value
 
     def __repr__(self):
-        return "< Query object: {} {} {} >".format(self.item, self.op, self.value)
+        return "< Query object: {} {} {} >".format(self.item, self.op, self.value)  # pragma: no cover
 
 
 class QueryBuilder:
@@ -47,6 +47,7 @@ class QueryBuilder:
         self.__entity_class = entity_class
         self.__project = entity_class.__project__
         self.__kind = entity_class.__kind__
+        self.__client = entity_class.__datastorm_client__
         self.__filters = entity_class.__base_filters__ or []
         self.__order = []
 
@@ -61,19 +62,14 @@ class QueryBuilder:
         return self
 
     def get(self, identifier: Union[Key, str] = None, key: Key = None):
-        client = datastore.Client(project=self.__project)
-        key = key or client.key(self.__kind, identifier)
-        raw_entity = client.get(key)
+        key = key or self.__client.key(self.__kind, identifier)
+        raw_entity = self.__client.get(key)
 
         return None if raw_entity is None else self.__entity_class(key, _raw_entity=raw_entity, **raw_entity)
 
-    def all(self, page_size: int = 500, parent_key: Union[Key, str] = None):
-        client = datastore.Client(project=self.__project)
+    def all(self, page_size: int = 500, parent_key: Key = None):
 
-        if parent_key is not None and type(parent_key) is str:
-            parent_key = client.key(self.__kind, parent_key)
-
-        query = client.query(kind=self.__kind, ancestor=parent_key)
+        query = self.__client.query(kind=self.__kind, ancestor=parent_key)
         [query.add_filter(filter.item, filter.op, filter.value) for filter in self.__filters]
 
         if self.__order:
@@ -81,23 +77,29 @@ class QueryBuilder:
 
         cursor = None
         while True:
+            last_yielded_entity = None
             query_iter = query.fetch(start_cursor=cursor, limit=page_size)
             for raw_entity in query_iter:
-                yield self.__entity_class(raw_entity.key, _raw_entity=raw_entity, **raw_entity)
+                last_yielded_entity = self.__entity_class(raw_entity.key, _raw_entity=raw_entity, **raw_entity)
+                yield last_yielded_entity
             cursor = query_iter.next_page_token
-            if not cursor:
+            if not cursor or last_yielded_entity is None:
                 break
 
     def first(self):
+        result = None
         try:
             result = next(self.all(page_size=1))
-        except TypeError:
-            result = None
+        except TypeError:  # pragma: no cover
+            pass
+        except StopIteration:  # pragma: no cover
+            pass
+
         return result
 
     def __repr__(self):
         return "< QueryBuilder filters: {}, ordered by: {}>".format(self.__filters or "No filters",
-                                                                    self.__order or "No order")
+                                                                    self.__order or "No order")  # pragma: no cover
 
 
 class AbstractDSEntity(type):
@@ -115,6 +117,7 @@ class BaseEntity:
     __project__ = None
     __base_filters__ = []
     __exclude__ = []
+    __datastorm_client__ = None
     __allowed_types__ = [str, int, float, bool, datetime.datetime, dict, list]
 
     def __init__(self, key: Union[Key, str], _kind: Optional[str] = None, _project: Optional[str] = None,
@@ -127,17 +130,16 @@ class BaseEntity:
         [setattr(self, name, self._autouncast(name, value)) for name, value in kwargs.items()]
         self._save_offline()
 
-    def save(self, exclude_from_indexes: tuple = ()):
-        client = datastore.Client(project=self.__project__)
-        self._save_offline(exclude_from_indexes)
-
-        client.put(self.__raw_entity)
+    def save(self):
+        self._save_offline()
+        self.__datastorm_client__.put(self.__raw_entity)
 
     def _save_offline(self, exclude_from_indexes: tuple = ()):
         self.__raw_entity = self.__raw_entity or datastore.Entity(key=self.key,
                                                                   exclude_from_indexes=exclude_from_indexes)
         fields_to_store = {attr for attr in dir(self) if
-                           type(getattr(self, attr)) in self.__allowed_types__ and not attr.startswith("_")} - self.__default_excludes
+                           type(getattr(self, attr)) in self.__allowed_types__ and not attr.startswith(
+                               "_")} - self.__default_excludes
         entity_dict = {attr: self._autocast(getattr(self, attr)) for attr in fields_to_store}
         self.__raw_entity.update(entity_dict)
 
@@ -145,7 +147,7 @@ class BaseEntity:
         if type(value) in [list, dict]:
             try:
                 return json.dumps(value, sort_keys=True)
-            except:
+            except:  # pragma: no cover
                 pass
         return value
 
@@ -153,21 +155,20 @@ class BaseEntity:
         if hasattr(self, property) and type(getattr(self, property)) in [dict, list]:
             try:
                 return json.loads(value)
-            except:
+            except:  # pragma: no cover
                 pass
         return value
 
     def delete(self):
         """Delete the object from Datastore."""
-        client = datastore.Client(project=self.__project__)
-        client.delete(self.__raw_entity.key)
+        self.__datastorm_client__.delete(self.key)
 
     @classmethod
     def generate_key(cls, identifier: str, parent_key: Optional[Key] = None):
-        return datastore.Client(project=cls.__project__).key(cls.__kind__, identifier, parent=parent_key)
+        return cls.__datastorm_client__.key(cls.__kind__, identifier, parent=parent_key)
 
     def get_raw_entity(self):
         return self.__raw_entity
 
     def __repr__(self):
-        return "< {name} >".format(name=self.__kind__)
+        return "< {name} >".format(name=self.__kind__)  # pragma: no cover
