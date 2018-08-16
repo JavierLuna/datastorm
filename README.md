@@ -61,8 +61,16 @@ datastorm.save_multi(entity_list)
 pip install datastorm
 ```
 
+## Test
+For running the tests you'll need a [Datastore emulator](https://cloud.google.com/datastore/docs/tools/datastore-emulator).
+
+The recommended command for running it is:
+````gcloud beta emulators datastore start --consistency=1````
+
+You can pass the tests with ````make test````
+
 ## Disclaimer
 
-Proper tests and a decent documentation will roll in a few days.
+Proper documentation will roll in a few days.
 
 Fork from [OrbitalAds/dittostore](https://github.com/OrbitalAds/dittostore), which I also created.
