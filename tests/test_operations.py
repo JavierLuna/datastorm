@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from datastorm.objects import FilterField
-from .test_base import TestBase
+from tests.test_base import TestBase
 
 class TestQuery(TestBase):
 
@@ -38,19 +38,19 @@ class TestQuery(TestBase):
     def test_query_get_int_filter_eq_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, int_field=1, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("int_field") == 1).filter(FilterField("uuid") == uuid).get(uuid)
+        result = self.TestEntity1.query.filter(FilterField("int_field") == 1).filter(FilterField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_float_filter_eq_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, float_field=1.0, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("float_field") == 1.0).filter(FilterField("uuid") == uuid).get(uuid)
+        result = self.TestEntity1.query.filter(FilterField("float_field") == 1.0).filter(FilterField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_str_filter_eq_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foo", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("str_field") == "foo").filter(FilterField("uuid") == uuid).get(uuid)
+        result = self.TestEntity1.query.filter(FilterField("str_field") == "foo").filter(FilterField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_int_filter_lt_no_result(self):
@@ -80,9 +80,9 @@ class TestQuery(TestBase):
 
     def test_query_get_float_filter_lt_result(self):
         uuid = str(uuid4())
-        a = self.TestEntity1(uuid, float_field=2.0, uuid=uuid)
+        a = self.TestEntity1(uuid, float_field=1.0, uuid=uuid)
         a.save()
-        result = list(self.TestEntity1.query.filter(FilterField("float_field") < 1.0).all())
+        result = self.TestEntity1.query.filter(FilterField("float_field") < 2.0).filter(FilterField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_str_filter_lt_result(self):
