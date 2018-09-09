@@ -1,6 +1,6 @@
 import datetime
 import json
-from typing import Union, Optional
+from typing import Union, Optional, List
 
 from google.cloud import datastore
 from google.cloud.datastore import Key, Entity
@@ -49,6 +49,7 @@ class QueryBuilder:
         self.__kind = entity_class.__kind__
         self.__client = entity_class.__datastorm_client__
         self.__filters = entity_class.__base_filters__ or []
+        self.__projection = []
         self.__order = []
 
     def filter(self, filter: Query):
@@ -59,6 +60,10 @@ class QueryBuilder:
         field = field.field_name if type(field) is FilterField else field
         field = "-" + field if inverted else field
         self.__order.append(field)
+        return self
+
+    def only(self, *args: List[str]):
+        self.__projection += args
         return self
 
     def get(self, identifier: Union[Key, str] = None, key: Key = None):
@@ -74,6 +79,9 @@ class QueryBuilder:
 
         if self.__order:
             query.order = self.__order
+
+        if self.__projection:
+            query.projection = self.__projection
 
         cursor = None
         while True:
