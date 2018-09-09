@@ -52,8 +52,8 @@ class QueryBuilder:
         self.__projection = []
         self.__order = []
 
-    def filter(self, filter: Query):
-        self.__filters.append(filter)
+    def filter(self, *filters: Query):
+        self.__filters += filters
         return self
 
     def order(self, field: Union[FilterField, str], inverted: bool = False):

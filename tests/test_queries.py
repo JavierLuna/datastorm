@@ -223,6 +223,20 @@ class TestQuery(TestBase):
             FilterField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
+    def test_query_multiple_filters(self):
+        uuid = str(uuid4())
+        self.TestEntity1(uuid, str_field="foe", other_field="foe2", uuid=uuid).save()
+        result = self.TestEntity1.query.filter(FilterField('str_field') == "foe",
+                                               FilterField('other_field') == "foe2").first()
+        self.assertEqual(result.uuid, uuid)
+
+    def test_query_chained_filters(self):
+        uuid = str(uuid4())
+        self.TestEntity1(uuid, str_field="foe", other_field="foe2", uuid=uuid).save()
+        result = self.TestEntity1.query.filter(FilterField('str_field') == "foe").filter(
+            FilterField('other_field') == "foe2").first()
+        self.assertEqual(result.uuid, uuid)
+
     def test_query_ordered_ascendent_results(self):
         uuid1, uuid2 = str(uuid4()), str(uuid4())
         self.TestEntity1(uuid1, int_field=1, uuid=uuid1).save()
@@ -240,6 +254,26 @@ class TestQuery(TestBase):
         self.assertEqual(len(results), 2)
         self.assertEqual(uuid2, results[0].uuid)
         self.assertEqual(uuid1, results[1].uuid)
+
+    def test_chained_order_and_filters(self):
+        uuid1, uuid2 = str(uuid4()), str(uuid4())
+        self.TestEntity1(uuid1, int_field=1, foo=True, uuid=uuid1).save()
+        self.TestEntity1(uuid2, int_field=2, foo=True, uuid=uuid2).save()
+        results = list(
+            self.TestEntity1.query.order(self.TestEntity1.int_field).filter(FilterField('foo') == True).all())
+        self.assertEqual(len(results), 2)
+        self.assertEqual(uuid1, results[0].uuid)
+        self.assertEqual(uuid2, results[1].uuid)
+
+    def test_chained_filters_and_order(self):
+        uuid1, uuid2 = str(uuid4()), str(uuid4())
+        self.TestEntity1(uuid1, int_field=1, foo=True, uuid=uuid1).save()
+        self.TestEntity1(uuid2, int_field=2, foo=True, uuid=uuid2).save()
+        results = list(
+            self.TestEntity1.query.filter(FilterField('foo') == True).order(self.TestEntity1.int_field).all())
+        self.assertEqual(len(results), 2)
+        self.assertEqual(uuid1, results[0].uuid)
+        self.assertEqual(uuid2, results[1].uuid)
 
     def test_query_parent_key(self):
         parent_uuid, descendant_uuid = str(uuid4()), str(uuid4())
@@ -263,3 +297,11 @@ class TestQuery(TestBase):
         result = self.TestEntity1.query.only('int_field').first()
         self.assertEqual(result.int_field, 1)
         self.assertFalse(hasattr(result, 'float_field'))
+
+    def test_query_chained_projection_and_filters(self):
+        uuid1 = str(uuid4())
+        self.TestEntity1(uuid1, int_field=1, float_field=1.2).save()
+        result = self.TestEntity1.query.only('int_field').filter(FilterField('int_field') >= 1).first()
+        self.assertEqual(result.int_field, 1)
+        self.assertFalse(hasattr(result, 'float_field'))
+
