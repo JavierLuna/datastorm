@@ -138,9 +138,16 @@ class BaseEntity:
         [setattr(self, name, self._autouncast(name, value)) for name, value in kwargs.items()]
         self._save_offline()
 
-    def save(self):
+    def save(self, force_sync=False):
         self._save_offline()
+        if force_sync:
+            self.sync()
         self.__datastorm_client__.put(self.__raw_entity)
+
+    def sync(self):
+        buffer = self.__raw_entity
+        self.__raw_entity = self.__datastorm_client__.get(self.key)
+        self.__raw_entity.update(buffer)
 
     def _save_offline(self, exclude_from_indexes: tuple = ()):
         self.__raw_entity = self.__raw_entity or datastore.Entity(key=self.key,
