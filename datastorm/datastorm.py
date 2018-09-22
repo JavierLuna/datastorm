@@ -4,7 +4,7 @@ from typing import List
 from google.cloud import datastore
 from google.cloud.datastore import Key
 
-from datastorm.objects import BaseEntity, AbstractDSEntity
+from datastorm.entity import BaseEntity, AbstractDSEntity
 
 
 class DataStorm:

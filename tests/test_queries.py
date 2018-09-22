@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from datastorm.objects import FilterField
+from datastorm.fields import IntField, FloatField, StringField, BooleanField
 from tests.test_base import TestBase
 
 
@@ -17,15 +17,15 @@ class TestQuery(TestBase):
         self.assertIsNotNone(result)
 
     def test_query_get_int_filter_eq_no_result(self):
-        result = self.TestEntity1.query.filter(FilterField("int_field") == 1).get(str(uuid4()))
+        result = self.TestEntity1.query.filter(IntField("int_field") == 1).get(str(uuid4()))
         self.assertIsNone(result)
 
     def test_query_get_float_filter_eq_no_result(self):
-        result = self.TestEntity1.query.filter(FilterField("float_field") == 1.0).get(str(uuid4()))
+        result = self.TestEntity1.query.filter(FloatField("float_field") == 1.0).get(str(uuid4()))
         self.assertIsNone(result)
 
     def test_query_get_str_filter_eq_no_result(self):
-        result = self.TestEntity1.query.filter(FilterField("str_field") == "foo").get(str(uuid4()))
+        result = self.TestEntity1.query.filter(StringField("str_field") == "foo").get(str(uuid4()))
         self.assertIsNone(result)
 
     def test_query_get_dict_filter_eq_no_result(self):
@@ -39,202 +39,202 @@ class TestQuery(TestBase):
     def test_query_get_int_filter_eq_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, int_field=1, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("int_field") == 1).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(IntField("int_field") == 1).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_float_filter_eq_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, float_field=1.0, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("float_field") == 1.0).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(FloatField("float_field") == 1.0).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_str_filter_eq_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foo", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("str_field") == "foo").filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(StringField("str_field") == "foo").filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_int_filter_lt_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, int_field=2, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("int_field") < 1).filter(FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(IntField("int_field") < 1).filter(StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_float_filter_lt_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, float_field=2.0, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("float_field") < 1.0).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(FloatField("float_field") < 1.0).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_str_filter_lt_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foo", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("str_field") < "foe").filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(StringField("str_field") < "foe").filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_int_filter_lt_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, int_field=1, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("int_field") < 2).filter(FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(IntField("int_field") < 2).filter(StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_float_filter_lt_result(self):
         uuid = str(uuid4())
         a = self.TestEntity1(uuid, float_field=1.0, uuid=uuid)
         a.save()
-        result = self.TestEntity1.query.filter(FilterField("float_field") < 2.0).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(FloatField("float_field") < 2.0).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_str_filter_lt_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foo", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("str_field") < "fop").filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(StringField("str_field") < "fop").filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_int_filter_gt_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, int_field=1, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("int_field") > 1).filter(FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(IntField("int_field") > 1).filter(StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_float_filter_gt_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, float_field=1.0, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("float_field") > 1.0).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(FloatField("float_field") > 1.0).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_str_filter_gt_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foo", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("str_field") > "foo").filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(StringField("str_field") > "foo").filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_int_filter_gt_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, int_field=2, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("int_field") > 1).filter(FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(IntField("int_field") > 1).filter(StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_float_filter_gt_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, float_field=2.0, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("float_field") > 1.0).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(FloatField("float_field") > 1.0).filter(
+            StringField("uuid") == uuid).first()
         results = list(self.TestEntity1.query.all())
         self.assertIsNotNone(result)
 
     def test_query_get_str_filter_gt_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foe", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("str_field") > "foa").filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(StringField("str_field") > "foa").filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_int_filter_le_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, int_field=1, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("int_field") <= 0).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(IntField("int_field") <= 0).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_float_filter_le_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, float_field=1.0, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("float_field") <= 0.0).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(FloatField("float_field") <= 0.0).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_str_filter_le_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foo", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("str_field") <= "foa").filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(StringField("str_field") <= "foa").filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_int_filter_le_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, int_field=2, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("int_field") <= 2).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(IntField("int_field") <= 2).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_float_filter_le_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, float_field=2.0, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("float_field") <= 2.0).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(FloatField("float_field") <= 2.0).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_str_filter_le_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foe", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("str_field") <= "foe").filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(StringField("str_field") <= "foe").filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_int_filter_ge_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, int_field=0, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("int_field") >= 1).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(IntField("int_field") >= 1).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_float_filter_ge_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, float_field=0.0, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("float_field") >= 1.0).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(FloatField("float_field") >= 1.0).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_str_filter_ge_no_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foa", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("str_field") >= "foo").filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(StringField("str_field") >= "foo").filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNone(result)
 
     def test_query_get_int_filter_ge_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, int_field=2, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("int_field") >= 2).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(IntField("int_field") >= 2).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_float_filter_ge_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, float_field=2.0, uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("float_field") >= 2.0).filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(FloatField("float_field") >= 2.0).filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_get_str_filter_ge_result(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foe", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField("str_field") >= "foe").filter(
-            FilterField("uuid") == uuid).first()
+        result = self.TestEntity1.query.filter(StringField("str_field") >= "foe").filter(
+            StringField("uuid") == uuid).first()
         self.assertIsNotNone(result)
 
     def test_query_multiple_filters(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foe", other_field="foe2", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField('str_field') == "foe",
-                                               FilterField('other_field') == "foe2").first()
+        result = self.TestEntity1.query.filter(StringField('str_field') == "foe",
+                                               StringField('other_field') == "foe2").first()
         self.assertEqual(result.uuid, uuid)
 
     def test_query_chained_filters(self):
         uuid = str(uuid4())
         self.TestEntity1(uuid, str_field="foe", other_field="foe2", uuid=uuid).save()
-        result = self.TestEntity1.query.filter(FilterField('str_field') == "foe").filter(
-            FilterField('other_field') == "foe2").first()
+        result = self.TestEntity1.query.filter(StringField('str_field') == "foe").filter(
+            StringField('other_field') == "foe2").first()
         self.assertEqual(result.uuid, uuid)
 
     def test_query_ordered_ascendent_results(self):
@@ -260,7 +260,7 @@ class TestQuery(TestBase):
         self.TestEntity1(uuid1, int_field=1, foo=True, uuid=uuid1).save()
         self.TestEntity1(uuid2, int_field=2, foo=True, uuid=uuid2).save()
         results = list(
-            self.TestEntity1.query.order(self.TestEntity1.int_field).filter(FilterField('foo') == True).all())
+            self.TestEntity1.query.order(self.TestEntity1.int_field).filter(BooleanField('foo') == True).all())
         self.assertEqual(len(results), 2)
         self.assertEqual(uuid1, results[0].uuid)
         self.assertEqual(uuid2, results[1].uuid)
@@ -270,7 +270,7 @@ class TestQuery(TestBase):
         self.TestEntity1(uuid1, int_field=1, foo=True, uuid=uuid1).save()
         self.TestEntity1(uuid2, int_field=2, foo=True, uuid=uuid2).save()
         results = list(
-            self.TestEntity1.query.filter(FilterField('foo') == True).order(self.TestEntity1.int_field).all())
+            self.TestEntity1.query.filter(BooleanField('foo') == True).order(self.TestEntity1.int_field).all())
         self.assertEqual(len(results), 2)
         self.assertEqual(uuid1, results[0].uuid)
         self.assertEqual(uuid2, results[1].uuid)
@@ -301,7 +301,7 @@ class TestQuery(TestBase):
     def test_query_chained_projection_and_filters(self):
         uuid1 = str(uuid4())
         self.TestEntity1(uuid1, int_field=1, float_field=1.2).save()
-        result = self.TestEntity1.query.only('int_field').filter(FilterField('int_field') >= 1).first()
+        result = self.TestEntity1.query.only('int_field').filter(IntField('int_field') >= 1).first()
         self.assertEqual(result.int_field, 1)
         self.assertFalse(hasattr(result, 'float_field'))
 
