@@ -34,14 +34,16 @@ class TestBase(unittest.TestCase):
     _HTTP = requests.Session
 
     def setUp(self):
+        from datastorm import fields
         self.datastorm = DataStorm(TestBase.TEST_PROJECT_ID, credentials=TestBase.DUMMY_CREDENTIALS(),
                                    _http=TestBase._HTTP())
 
         class TestEntity1(self.datastorm.DSEntity):
             __kind__ = "TestEntity1"
 
-            dict_field = dict()
-            list_field = list()
+            dict_field = fields.DictField()
+            list_field = fields.ListField()
+            int_field = fields.IntField()
 
         self.TestEntity1 = TestEntity1
 
