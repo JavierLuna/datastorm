@@ -58,7 +58,7 @@ class BooleanField(BaseField):
 class IntField(BaseField):
 
     def check_type(self, value):
-        return isinstance(value, int)
+        return isinstance(value, int) and not isinstance(value, bool)
 
 
 class FloatField(BaseField):
@@ -81,4 +81,4 @@ class DictField(BaseField):
 
 class ListField(BaseField):
     def check_type(self, value):
-        return issubclass(value, list)
+        return isinstance(value, list)
