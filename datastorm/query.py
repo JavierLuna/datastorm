@@ -31,8 +31,9 @@ class QueryBuilder:
         self.__projection += args
         return self
 
-    def get(self, identifier: Union[Key, str] = None, key: Key = None):
-        key = key or self.__client.key(self.__kind, identifier)
+    def get(self, key: Union[Key, str]):
+        if not isinstance(key, Key):
+            key = self.__client.key(self.__kind, key)
         raw_entity = self.__client.get(key)
 
         return None if raw_entity is None else self.__entity_class(key, _raw_entity=raw_entity, **raw_entity)
