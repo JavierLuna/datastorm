@@ -29,14 +29,13 @@ class EmulatorCreds(Credentials):
 
 
 class TestBase(unittest.TestCase):
-    TEST_PROJECT_ID = "tests"
+    TEST_PROJECT_ID = "datastorm-test"
     DUMMY_CREDENTIALS = EmulatorCreds
     _HTTP = requests.Session
 
     def setUp(self):
         from datastorm import fields
-        self.datastorm = DataStorm(TestBase.TEST_PROJECT_ID, credentials=TestBase.DUMMY_CREDENTIALS(),
-                                   _http=TestBase._HTTP())
+        self.datastorm = DataStorm(TestBase.TEST_PROJECT_ID)
 
         class TestEntity1(self.datastorm.DSEntity):
             __kind__ = "TestEntity1"
