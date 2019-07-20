@@ -295,13 +295,13 @@ class TestQuery(TestBase):
         uuid1 = str(uuid4())
         self.TestEntity1(uuid1, int_field=1, float_field=1.2).save()
         result = self.TestEntity1.query.only('int_field').first()
-        self.assertEqual(result.int_field, 1)
+        self.assertEqual(result['int_field'], 1)
         self.assertFalse(hasattr(result, 'float_field'))
 
     def test_query_chained_projection_and_filters(self):
         uuid1 = str(uuid4())
         self.TestEntity1(uuid1, int_field=1, float_field=1.2).save()
         result = self.TestEntity1.query.only('int_field').filter(IntField('int_field') >= 1).first()
-        self.assertEqual(result.int_field, 1)
+        self.assertEqual(result['int_field'], 1)
         self.assertFalse(hasattr(result, 'float_field'))
 

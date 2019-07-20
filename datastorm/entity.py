@@ -2,7 +2,7 @@ import inspect
 from typing import Optional, Union
 
 from google.cloud import datastore
-from google.cloud.datastore import Entity, Key
+from google.cloud.datastore import Key
 
 from datastorm.fields import BaseField, AnyField
 from datastorm.query import QueryBuilder
@@ -60,7 +60,7 @@ class BaseEntity:
 
     def get_datastore_entity(self):
         entity = datastore.Entity(key=self.key)
-        entity_dict = {field_name: field.dumps(getattr(self, field_name)) for field_name, field in
+        entity_dict = {field.field_name or field_name: field.dumps(getattr(self, field_name)) for field_name, field in
                        self.__datastorm_fields.items()}
         entity.update(entity_dict)
         return entity
