@@ -1,4 +1,3 @@
-import datetime
 import inspect
 from typing import Optional, Union
 
@@ -30,7 +29,6 @@ class BaseEntity:
     def __init__(self, key: Union[Key, str], _kind: Optional[str] = None, _project: Optional[str] = None,
                  _raw_entity: Optional[Entity] = None, **kwargs):
         self.key = key if type(key) is not str else self.generate_key(key)
-        self.__kind__ = _kind or self.__kind__
         self.__raw_entity = _raw_entity
         self.__datastorm_fields = {attr_name: attr for attr_name, attr in
                                    [(field_name, getattr(self, field_name)) for field_name in dir(self)] if
