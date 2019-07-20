@@ -23,8 +23,7 @@ class DataStorm:
         return AbstractDSEntity("DSEntity", (BaseEntity,), {'__kind__': None, '_datastore_client': self.client})
 
     def save_multi(self, entities: List[BaseEntity]):
-        [entity._save_offline() for entity in entities]
-        self.client.put_multi([entity.get_raw_entity() for entity in entities])
+        self.client.put_multi([entity.get_datastore_entity() for entity in entities]
 
     def generate_key(self, kind: str, identifier: str, parent_key: Key = None):
         return self.client.key(kind, identifier, parent=parent_key)

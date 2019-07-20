@@ -24,41 +24,31 @@ class AbstractDSEntity(type):
 class BaseEntity:
     __kind__ = None
     __base_filters__ = []
+
     _datastore_client = None
 
-    def __init__(self, key: Union[Key, str], _kind: Optional[str] = None, _project: Optional[str] = None,
-                 _raw_entity: Optional[Entity] = None, **kwargs):
+    def __init__(self, key: Union[Key, str], _raw_entity: Optional[Entity] = None, **kwargs):
         self.key = key if type(key) is not str else self.generate_key(key)
-        self.__raw_entity = _raw_entity
-
         self.__datastorm_fields = self.__resolve_mappings()
+
         [self.set(name, field.default) for name, field in self.__datastorm_fields.items()]
         [self.set(name, value) for name, value in kwargs.items()]
-        self._save_offline()
 
-    def save(self, force_sync=False):
-        self._save_offline()
-        if force_sync:
-            self.sync()
-        self._datastore_client.put(self.__raw_entity)
+    def save(self):
+        self._datastore_client.put(self.get_datastore_entity())
 
-    def set(self, name, value, field=AnyField):
-        field = self.__datastorm_fields.get(value, field)
+    def set(self, name, value, field=None):
+        field = field or self.__datastorm_fields.get(value, AnyField)
         self.__datastorm_fields[name] = field if field in self.__datastorm_fields or \
                                                  not inspect.isclass(field) else field()
         setattr(self, name, value)
 
     def sync(self):
-        buffer = self.__raw_entity
-        self.__raw_entity = self._datastore_client.get(self.key)
-        self.__raw_entity.update(buffer)
-
-    def _save_offline(self):
-        self.__raw_entity = self.__raw_entity or datastore.Entity(key=self.key)
-        entity_dict = {attr_name: field.dumps(getattr(self, attr_name)) for attr_name, field in
-                       self.__datastorm_fields.items()}
-        self.__raw_entity.update(entity_dict)
-
+        buffer = self.get_datastore_entity()
+        updated_instance = self._datastore_client.get(self.key)
+        for field_name, datastore_value in updated_instance.items():
+            if field_name not in buffer or buffer[field_name] != updated_instance[field_name]:
+                self.set(field_name, datastore_value)
     def delete(self):
         """Delete the object from Datastore."""
         self._datastore_client.delete(self.key)
@@ -67,8 +57,12 @@ class BaseEntity:
     def generate_key(cls, identifier: str, parent_key: Optional[Key] = None):
         return cls._datastore_client.key(cls.__kind__, identifier, parent=parent_key)
 
-    def get_raw_entity(self):
-        return self.__raw_entity
+    def get_datastore_entity(self):
+        entity = datastore.Entity(key=self.key)
+        entity_dict = {field_name: field.dumps(getattr(self, field_name)) for field_name, field in
+                       self.__datastorm_fields.items()}
+        entity.update(entity_dict)
+        return entity
 
     def __resolve_mappings(self):
         field_mapping = {}
