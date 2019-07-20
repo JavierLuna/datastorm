@@ -35,7 +35,7 @@ class QueryBuilder:
             key = self.__client.key(self.__kind, key)
         raw_entity = self.__client.get(key)
 
-        return None if raw_entity is None else self.__entity_class(key, _raw_entity=raw_entity, **raw_entity)
+        return None if raw_entity is None else self.__entity_class(key, **raw_entity)
 
     def all(self, page_size: int = 500, parent_key: Key = None):
 
@@ -53,7 +53,7 @@ class QueryBuilder:
             last_yielded_entity = None
             query_iter = query.fetch(start_cursor=cursor, limit=page_size)
             for raw_entity in query_iter:
-                last_yielded_entity = self.__entity_class(raw_entity.key, _raw_entity=raw_entity, **raw_entity)
+                last_yielded_entity = self.__entity_class(raw_entity.key, **raw_entity)
                 yield last_yielded_entity
             cursor = query_iter.next_page_token
             if not cursor or last_yielded_entity is None:

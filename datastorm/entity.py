@@ -27,7 +27,7 @@ class BaseEntity:
 
     _datastore_client = None
 
-    def __init__(self, key: Union[Key, str], _raw_entity: Optional[Entity] = None, **kwargs):
+    def __init__(self, key: Union[Key, str], **kwargs):
         self.key = key if type(key) is not str else self.generate_key(key)
         self.__datastorm_fields = self.__resolve_mappings()
 
@@ -49,6 +49,7 @@ class BaseEntity:
         for field_name, datastore_value in updated_instance.items():
             if field_name not in buffer or buffer[field_name] != updated_instance[field_name]:
                 self.set(field_name, datastore_value)
+
     def delete(self):
         """Delete the object from Datastore."""
         self._datastore_client.delete(self.key)
