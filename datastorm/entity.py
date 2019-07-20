@@ -30,9 +30,8 @@ class BaseEntity:
                  _raw_entity: Optional[Entity] = None, **kwargs):
         self.key = key if type(key) is not str else self.generate_key(key)
         self.__raw_entity = _raw_entity
-        self.__datastorm_fields = {attr_name: attr for attr_name, attr in
-                                   [(field_name, getattr(self, field_name)) for field_name in dir(self)] if
-                                   isinstance(attr, BaseField)}
+
+        self.__datastorm_fields = self.__resolve_mappings()
         [self.set(name, field.default) for name, field in self.__datastorm_fields.items()]
         [self.set(name, value) for name, value in kwargs.items()]
         self._save_offline()
@@ -71,6 +70,16 @@ class BaseEntity:
 
     def get_raw_entity(self):
         return self.__raw_entity
+
+    def __resolve_mappings(self):
+        field_mapping = {}
+        for attribute_name in dir(self):
+            attribute = getattr(self, attribute_name)
+            if inspect.isclass(attribute) and issubclass(attribute, BaseField):
+                attribute = attribute()
+            if isinstance(attribute, BaseField):
+                field_mapping[attribute_name] = attribute
+        return field_mapping
 
     def __repr__(self):
         return "< {name} >".format(name=self.__kind__)  # pragma: no cover
