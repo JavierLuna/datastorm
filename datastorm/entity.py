@@ -53,9 +53,8 @@ class BaseEntity:
         self.__raw_entity = self._datastore_client.get(self.key)
         self.__raw_entity.update(buffer)
 
-    def _save_offline(self, exclude_from_indexes: tuple = ()):
-        self.__raw_entity = self.__raw_entity or datastore.Entity(key=self.key,
-                                                                  exclude_from_indexes=exclude_from_indexes)
+    def _save_offline(self):
+        self.__raw_entity = self.__raw_entity or datastore.Entity(key=self.key)
         entity_dict = {attr_name: field.dumps(getattr(self, attr_name)) for attr_name, field in
                        self.__datastorm_fields.items()}
         self.__raw_entity.update(entity_dict)
