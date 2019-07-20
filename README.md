@@ -20,8 +20,10 @@ datastorm = DataStorm("example-gcloud-project")
 ### Define an entity
 
 ```python
+from datastorm import fields
 class EntityName(datastorm.DSEntity): 
     __kind__ = "EntityName"
+    foo = fields.StringField(default="Default values rules!")
 ```
 
 ### Query for a field 
@@ -35,7 +37,8 @@ for result in results:
 
 ### Query several filters
 ```python
-results = EntityName.query.filter(EntityName.foo == "bar").filter(EntityName.numeric_foo < 2).all()
+from datastorm.filter import Filter
+results = EntityName.query.filter(EntityName.foo == "bar").filter(Filter('numeric_foo', '<', 2)).all()
 
 for result in results:
     do_stuff(result) # type(result) is EntityName
@@ -47,7 +50,7 @@ e = EntityName()
 e.foo = "bar"
 e.save()
 e.foo = "rab"
-e.bar = True
+e.set('bar', True)
 e.save()
 ```
 
