@@ -10,9 +10,8 @@ class QueryBuilder:
 
     def __init__(self, entity_class):
         self.__entity_class = entity_class
-        self.__project = entity_class.__project__
         self.__kind = entity_class.__kind__
-        self.__client = entity_class.__datastorm_client__
+        self.__client = entity_class._datastore_client
         self.__filters = entity_class.__base_filters__ or []
         self.__projection = []
         self.__order = []

@@ -23,7 +23,7 @@ class DataStorm:
 
     @property
     def DSEntity(self):
-        return AbstractDSEntity("DSEntity", (BaseEntity,), {'__kind__': None, '__datastorm_client__': self.client})
+        return AbstractDSEntity("DSEntity", (BaseEntity,), {'__kind__': None, '_datastore_client': self.client})
 
     def save_multi(self, entities: List[BaseEntity]):
         [entity._save_offline() for entity in entities]
