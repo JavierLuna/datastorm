@@ -9,17 +9,14 @@ from datastorm.entity import BaseEntity, AbstractDSEntity
 
 class DataStorm:
 
-    def __init__(self, project=None, namespace=None, credentials=None, _http=None, _use_grpc=None):
+    def __init__(self, project=None, namespace=None, credentials=None):
         self.project = project or os.getenv("DATASTORE_PROJECT_ID", None)
         self.credentials = credentials
         self.namespace = namespace
-        self._http = _http
-        self._use_grpc = _use_grpc
 
     @property
     def client(self):
-        return datastore.Client(project=self.project, namespace=self.namespace, credentials=self.credentials,
-                                _http=self._http, _use_grpc=self._use_grpc)
+        return datastore.Client(project=self.project, namespace=self.namespace, credentials=self.credentials)
 
     @property
     def DSEntity(self):
