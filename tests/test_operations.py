@@ -44,26 +44,3 @@ class TestOperations(TestBase):
 
         result = self.TestEntity1.query.get(uuid)
         self.assertIsNone(result)
-
-    def test_update_projection(self):
-        uuid = str(uuid4())
-        self.TestEntity1(uuid, int_field=1, float_field=1.2).save()
-        result = self.TestEntity1.query.only('int_field').first()
-        self.assertFalse(hasattr(result, 'float_field'))
-        result.int_field = 2
-        result.save()
-        result = self.TestEntity1.query.first()
-        self.assertFalse(hasattr(result, 'float_field'))
-        self.assertEqual(result.int_field, 2)
-
-    def test_update_projection_force_sync(self):
-        uuid = str(uuid4())
-        self.TestEntity1(uuid, int_field=1, float_field=1.2).save()
-        result = self.TestEntity1.query.only('int_field').first()
-        self.assertFalse(hasattr(result, 'float_field'))
-        result.int_field = 2
-        result.save(force_sync=True)
-        result = self.TestEntity1.query.first()
-        self.assertTrue(hasattr(result, 'float_field'))
-        self.assertEqual(result.int_field, 2)
-

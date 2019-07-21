@@ -6,11 +6,11 @@ name = "pypi"
 [packages]
 google-cloud-datastore = "*"
 
-
 [dev-packages]
 twine = "*"
 python-dotenv = "*"
 coverage = "*"
+mkdocs = "*"
 
 [requires]
 python_version = "3.6"
