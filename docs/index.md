@@ -1,17 +1,25 @@
-# Welcome to MkDocs
+# Datastorm
 
-For full documentation visit [mkdocs.org](https://mkdocs.org).
+A simple and intuitive Google Datastore ODM 
 
-## Commands
+## Installation
+`datastorm` is currently on [PyPi](https://pypi.org/project/datastorm/), so you can install it using `pip`:
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs help` - Print this help message.
+```
+pip install datastorm
+```
 
-## Project layout
+## Why?
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+Because no sane person who has worked with Google Cloud's Datastore has had a good time.
+
+It is a simple database yet the python client is so strange and cumbersome to use. 
+Even for the little and "easy" things you'll want to do right away, like creating or updating entities, you'll need to read several pages of documentation.
+
+And don't get me started on querying.
+
+Anyways, I got tired of copying and pasting old code everytime I wanted to do something with this database, so Datastorm was born.
+
+Datastorm is focused on being simple, intuitive and easy to use. That's it.
+
+If you just want to use the damn database, you've come to the right place.

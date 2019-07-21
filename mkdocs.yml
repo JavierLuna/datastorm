@@ -1,3 +1,5 @@
 site_name: Datastorm
 pages:
-    - Index: index.md
+    - Home: index.md
+    - Quickstart: quickstart.md
+theme: readthedocs
