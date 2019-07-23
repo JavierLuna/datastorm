@@ -1,4 +1,5 @@
 # Datastorm
+![Python versions](https://img.shields.io/badge/Python-3.5%2C%203.6%2C%203.7-green.svg) ![PyPi](https://img.shields.io/badge/PyPi-0.0.0a5-brightgreen.svg) ![coverage](https://img.shields.io/badge/coverage-95%25-green.svg)
 
 ## What is it?
 
