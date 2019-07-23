@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='datastorm',
-    version='0.0.0a4',
-    description='Simple and easy to use ODM for Google Datastore',
+    version='0.0.0a5',
+    description='Simple and easy to use ODM for Google Datastore. Documentation: https://datastorm-docs.rtfd.io',
     url='https://github.com/JavierLuna/datastorm',
     author='Javier Luna Molina',
     author_email='jlunadevel@gmail.com',
