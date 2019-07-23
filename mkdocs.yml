@@ -1,3 +1,13 @@
 site_name: Datastorm
-pages:
-    - Index: index.md
+nav:
+    - Home: 'index.md'
+    - Quickstart: 'quickstart.md'
+    - Tutorial:
+        - Datastorm: Datastorm/datastorm.md
+        - Entity: Datastorm/entity.md
+        - Fields: Datastorm/fields.md
+        - Querying: Datastorm/querying.md
+    - License: 'license.md'
+    - Tests: 'tests.md'
+    - Contribution: 'contribute.md'
+theme: readthedocs
