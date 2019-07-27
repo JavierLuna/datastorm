@@ -75,6 +75,4 @@ You can pass the tests with ````make test````
 
 ## Disclaimer
 
-Proper documentation will roll in a few days.
-
 Fork from [OrbitalAds/dittostore](https://github.com/OrbitalAds/dittostore), which I also created.
