@@ -4,7 +4,7 @@ from datastorm import DataStorm
 
 
 class TestBase(unittest.TestCase):
-    TEST_PROJECT_ID = "datastorm-test"
+    TEST_PROJECT_ID = "test"
 
     def setUp(self):
         from datastorm import fields
