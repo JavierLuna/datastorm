@@ -9,7 +9,7 @@ jobs:
 
   tests:
     docker:
-        - image: javierluna/datastore-python:255.0.0-3.6.9 
+        - image: javierluna/datastorm-test-env:255.0.0-3.6.9 
     steps:
       - checkout
       - run:
