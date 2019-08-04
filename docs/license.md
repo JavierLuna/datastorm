@@ -5,7 +5,7 @@ Datastorm uses the MIT license.
 
 ## TLDR
 
-Taken from: (tldrlegal.com)[https://tldrlegal.com/license/gnu-general-public-license-v3-(gpl-3)#summary]
+Taken from: [tldrlegal.com](https://tldrlegal.com/license/mit-license)
 
 
 ### Can
