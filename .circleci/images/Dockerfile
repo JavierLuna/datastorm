@@ -4,10 +4,11 @@ MAINTAINER javierluna
 LABEL com.circleci.preserve-entrypoint=true
 
 ARG CLOUD_SDK_VERSION=255.0.0
-ARG DATASTORE_PROJECT_ID=test
+ARG DATASTORE_PROJECT_ID=datastorm-test-env
 
 ENV CLOUD_SDK_VERSION=$CLOUD_SDK_VERSION
 ENV DATASTORE_PROJECT_ID=$DATASTORE_PROJECT_ID
+ENV DATASTORE_EMULATOR_HOST=localhost:8081
 ENV PATH /google-cloud-sdk/bin:$PATH
 
 ENV LC_ALL=C.UTF-8
@@ -28,4 +29,4 @@ EXPOSE 8081
 
 VOLUME ["/root/.config", "/opt/data"]
 
-ENTRYPOINT ["gcloud", "beta", "emulators", "datastore", "start", "--data-dir=/opt/data", "--host-port=0.0.0.0:8081", "--consistency=1"]
+ENTRYPOINT ["gcloud", "beta", "emulators", "datastore", "start", "--host-port=0.0.0.0:8081", "--consistency=1", "--project=datastorm-test-env"]

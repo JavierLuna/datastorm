@@ -13,7 +13,7 @@ class DataStorm:
         self.project = project or os.getenv("DATASTORE_PROJECT_ID", None)
         self.credentials = credentials
         self.namespace = namespace
-        self._http = None
+        self._http = _http
 
     @property
     def client(self):
