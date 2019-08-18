@@ -1,5 +1,7 @@
 import unittest
 
+from google.auth.credentials import AnonymousCredentials
+
 from datastorm import DataStorm
 
 
@@ -8,7 +10,7 @@ class TestBase(unittest.TestCase):
 
     def setUp(self):
         from datastorm import fields
-        self.datastorm = DataStorm(TestBase.TEST_PROJECT_ID)
+        self.datastorm = DataStorm(TestBase.TEST_PROJECT_ID, credentials=AnonymousCredentials())
 
         class TestEntity1(self.datastorm.DSEntity):
             __kind__ = "TestEntity1"
