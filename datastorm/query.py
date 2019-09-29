@@ -69,8 +69,9 @@ class QueryBuilder:
 
     def _make_entity_instance(self, key: Key, attr_data: dict):
         entity = self._entity_class(key)
-        for field_name, serialized_data in attr_data.items():
-            entity.set(field_name, entity._datastorm_mapper.get_field(field_name).loads(serialized_data))
+        for datastore_field_name, serialized_data in attr_data.items():
+            datastorm_field_name = entity._datastorm_mapper.resolve_datastore_alias(datastore_field_name)
+            entity.set(datastorm_field_name, entity._datastorm_mapper.get_field(datastorm_field_name).loads(serialized_data))
         return entity
 
     def __repr__(self):
