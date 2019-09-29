@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from datastorm.fields import IntField, FloatField, StringField, BooleanField
-from tests.test_base import TestBase
+from tests.legacy.test_base import TestBase
 
 
 class TestQuery(TestBase):

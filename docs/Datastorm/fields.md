@@ -62,6 +62,7 @@ Checks the input's type.
 * `IntField`
 * `FloatField`
 * `StringField`
+* `JSONField`
 * `DictField`
 * `ListField`
 

@@ -23,4 +23,4 @@ jobs:
           name: Run tests
           command: |
             . env/bin/activate
-            make test
+            make tests
