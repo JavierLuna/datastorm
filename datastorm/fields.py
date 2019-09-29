@@ -1,3 +1,4 @@
+import json
 from typing import Union, Any
 from datastorm.filter import Filter
 from datastorm.base import FieldABC
@@ -16,6 +17,10 @@ class BaseField(FieldABC):
     def dumps(self, value) -> Any:
         if self.enforce_type and not self.check_type(value):
             raise ValueError("Type mismatch for value {} in field {}".format(value, self.__class__.__name__))
+        return self._dumps(value)
+
+    @classmethod
+    def _dumps(cls, value) -> Any:
         return value
 
     def check_type(self, value) -> bool:
@@ -60,11 +65,19 @@ class IntField(BaseField):
     def check_type(self, value):
         return isinstance(value, int) and not isinstance(value, bool)
 
+    @classmethod
+    def _dumps(cls, value) -> int:
+        return int(value)
+
 
 class FloatField(BaseField):
 
     def check_type(self, value):
         return isinstance(value, float)
+
+    @classmethod
+    def _dumps(cls, value) -> float:
+        return float(value)
 
 
 class StringField(BaseField):
@@ -72,13 +85,31 @@ class StringField(BaseField):
     def check_type(self, value):
         return isinstance(value, str)
 
+    @classmethod
+    def _dumps(cls, value) -> str:
+        return str(value)
+
 
 class DictField(BaseField):
 
     def check_type(self, value):
         return isinstance(value, dict)
 
+    @classmethod
+    def _dumps(cls, value) -> str:
+        return json.dumps(value)
+
+    def loads(self, serialized_value: str) -> dict:
+        return json.loads(serialized_value)
+
 
 class ListField(BaseField):
     def check_type(self, value):
         return isinstance(value, list)
+
+    @classmethod
+    def _dumps(cls, value) -> list:
+        return json.dumps(value)
+
+    def loads(self, serialized_value) -> list:
+        return json.loads(serialized_value)
