@@ -68,7 +68,10 @@ class QueryBuilder:
         return result
 
     def _make_entity_instance(self, key: Key, attr_data: dict):
-        return self._entity_class(key, **attr_data)
+        entity = self._entity_class(key)
+        for field_name, serialized_data in attr_data.items():
+            entity.set(field_name, entity._datastorm_mapper.get_field(field_name).loads(serialized_data))
+        return entity
 
     def __repr__(self):
         return "< QueryBuilder filters: {}, ordered by: {}>".format(self._filters or "No filters",
