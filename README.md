@@ -66,15 +66,13 @@ pip install datastorm
 ```
 
 ## Test
-For running the tests you'll need a [Datastore emulator](https://cloud.google.com/datastore/docs/tools/datastore-emulator).
-
-The recommended command for running it is:
-````gcloud beta emulators datastore start --consistency=1````
-
-You can pass the tests with ````make test````
+To be able to run the tests, you'll need [Docker](https://www.docker.com/) installed.
+Then:
+```
+make docker-test
+```
+To be able to run the tests without Docker, please visit the documentation.
 
 ## Disclaimer
-
-Proper documentation will roll in a few days.
 
 Fork from [OrbitalAds/dittostore](https://github.com/OrbitalAds/dittostore), which I also created.
