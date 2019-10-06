@@ -1,10 +1,11 @@
 import inspect
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from google.cloud import datastore
 from google.cloud.datastore import Key
 
-from datastorm.fields import BaseField, AnyField
+from datastorm.fields import BaseField
+from datastorm.mapper import FieldMapper
 from datastorm.query import QueryBuilder
 
 
@@ -29,19 +30,26 @@ class BaseEntity:
 
     def __init__(self, key: Union[Key, str], **kwargs):
         self.key = key if type(key) is not str else self.generate_key(key)
-        self.__datastorm_fields = self.__resolve_mappings()
+        self._datastorm_mapper = self.__resolve_mappings()
+        self.__set_defaults()
 
-        [self.set(name, field.default) for name, field in self.__datastorm_fields.items()]
         [self.set(name, value) for name, value in kwargs.items()]
 
     def save(self):
         self._datastore_client.put(self.get_datastore_entity())
 
-    def set(self, name, value, field=None):
-        field = field or self.__datastorm_fields.get(value, AnyField)
-        self.__datastorm_fields[name] = field if field in self.__datastorm_fields or \
-                                                 not inspect.isclass(field) else field()
-        setattr(self, name, value)
+    def set(self, field_name: str, value: Any, field: BaseField = None):
+        if field:
+            self._map_field(field_name, field)
+        if field_name not in self._datastorm_mapper.fields:
+            self._datastorm_mapper.set_field(field_name, self._datastorm_mapper.get_field(field_name))
+
+
+        setattr(self, field_name, value)
+
+    def _map_field(self, field_name: str, field: Union[BaseField, type]):
+        field = field() if inspect.isclass(field) else field
+        self._datastorm_mapper.set_field(field_name, field)
 
     def sync(self):
         buffer = self.get_datastore_entity()
@@ -60,20 +68,26 @@ class BaseEntity:
 
     def get_datastore_entity(self):
         entity = datastore.Entity(key=self.key)
-        entity_dict = {field.field_name or field_name: field.dumps(getattr(self, field_name)) for field_name, field in
-                       self.__datastorm_fields.items()}
-        entity.update(entity_dict)
+        for field_name in self._datastorm_mapper.fields:
+            field = self._datastorm_mapper.get_field(field_name)
+
+            entity_dict = {field.field_name or field_name: field.dumps(getattr(self, field_name))}
+            entity.update(entity_dict)
         return entity
 
-    def __resolve_mappings(self):
-        field_mapping = {}
+    def __resolve_mappings(self) -> FieldMapper:
+        field_mapper = FieldMapper()
         for attribute_name in dir(self):
             attribute = getattr(self, attribute_name)
             if inspect.isclass(attribute) and issubclass(attribute, BaseField):
                 attribute = attribute()
             if isinstance(attribute, BaseField):
-                field_mapping[attribute_name] = attribute
-        return field_mapping
+                field_mapper.set_field(attribute_name, attribute)
+        return field_mapper
+
+    def __set_defaults(self):
+        for field_name in self._datastorm_mapper.fields:
+            self.set(field_name, self._datastorm_mapper.default(field_name))
 
     def __repr__(self):
         return "< {name} >".format(name=self.__kind__)  # pragma: no cover

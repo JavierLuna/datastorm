@@ -1,8 +1,17 @@
-.PHONY: test
+.PHONY: tests
 
-test: export DATASTORE_EMULATOR_HOST=0.0.0.0:8081
-test:
-	python -m unittest discover tests/
+e2e-tests: export DATASTORE_EMULATOR_HOST=0.0.0.0:8081
+e2e-tests:
+	pipenv run py.test tests/e2e
+
+unit-tests:
+	pipenv run py.test tests/unit
+
+legacy-tests: export DATASTORE_EMULATOR_HOST=0.0.0.0:8081
+legacy-tests:
+	pipenv run py.test tests/legacy
+
+tests: unit-tests legacy-tests e2e-tests
 
 coverage:
 	PYTHONPATH=. coverage run --source datastorm setup.py test
@@ -13,7 +22,7 @@ docker-build:
 	docker build -t datastorm-test-env:255.0.0-3.6.9 .circleci/images
 
 docker-run: docker-build
-	docker run --name datastorm-test-env --publish 8081:8081 datastorm-test-env:255.0.0-3.6.9
+	docker run --rm --name datastorm-test-env --publish 8081:8081 datastorm-test-env:255.0.0-3.6.9
 
 docker-tag:
 	docker tag datastorm-test-env:255.0.0-3.6.9 javierluna/datastorm-test-env:255.0.0-3.6.9
@@ -25,11 +34,10 @@ docker-clean:
 	docker stop datastore-test-env
 	docker rm datastore-test-env
 
-docker-test: docker-build
-	docker run -d --name datastore-test-env --publish 8081:8081 datastorm-test-env:255.0.0-3.6.9
+docker-tests: docker-build
+	docker run --rm -d --name datastore-test-env --publish 8081:8081 datastorm-test-env:255.0.0-3.6.9
 	sleep 5
-	$(MAKE) test
-	$(MAKE) docker-clean
+	$(MAKE) tests
 
 
 clean:
