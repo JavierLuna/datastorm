@@ -1,5 +1,5 @@
 from uuid import uuid4
-from tests.test_base import TestBase
+from tests.legacy.test_base import TestBase
 
 class TestDatastorm(TestBase):
 
