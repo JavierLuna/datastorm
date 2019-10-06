@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "datastorm"
+version = "0.0.0a6"
+homepage = "https://github.com/JavierLuna/datastorm"
+repository = "https://github.com/JavierLuna/datastorm"
+documentation = "https://datastorm.readthedocs.io/en/latest/"
+description = "Simple and easy to use ODM for Google Datastore. Documentation: https://datastorm-docs.rtfd.io"
+authors = ["JavierLuna <javierlunamolina@gmail.com>"]
+license = "MIT"
+keywords = ["odm", "datastore", "google-cloud", "google-datastore", "orm"]
+classifiers= [
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Natural Language :: Spanish',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+    ]
+packages = [{include= "datastorm"}]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+google-cloud-datastore = "^1.9"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+pytest-mock = "^1.11"
+pytest-cov = "^2.8"
+flake8 = "^3.7"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
