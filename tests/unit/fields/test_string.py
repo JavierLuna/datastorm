@@ -18,3 +18,7 @@ def test_check_type_no_string_ko(field):
 
 def test_dumps_strings(field):
     assert type(field.dumps(1)) is str
+
+
+def test_default_is_empty_string(field):
+    assert field.default == ""

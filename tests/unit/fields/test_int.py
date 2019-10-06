@@ -18,3 +18,7 @@ def test_check_type_no_int_ko(field):
 
 def test_dumps_integers(field):
     assert type(field.dumps(1.03)) is int
+
+
+def test_default_is_integer_zero(field):
+    assert field.default == 0

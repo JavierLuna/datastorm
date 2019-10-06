@@ -18,3 +18,7 @@ def test_check_type_no_boolean_ko(field):
 
 def test_dumps_booleans(field):
     assert type(field.dumps(1)) is bool
+
+
+def test_default_is_false(field):
+    assert field.default is False
