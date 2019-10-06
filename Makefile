@@ -9,18 +9,23 @@ dependencies:
 
 # Testing
 
+unit-tests:
+	poetry run py.test tests/unit
+
+integration-tests: export DATASTORE_EMULATOR_HOST=0.0.0.0:8081
+integration-tests:
+	poetry run py.test tests/integration
+
 e2e-tests: export DATASTORE_EMULATOR_HOST=0.0.0.0:8081
 e2e-tests:
 	poetry run py.test tests/e2e
 
-unit-tests:
-	poetry run py.test tests/unit
 
 legacy-tests: export DATASTORE_EMULATOR_HOST=0.0.0.0:8081
 legacy-tests:
 	poetry run py.test tests/legacy
 
-tests: unit-tests legacy-tests e2e-tests
+tests: unit-tests integration-tests legacy-tests e2e-tests
 
 coverage:  export DATASTORE_EMULATOR_HOST=0.0.0.0:8081
 coverage:
