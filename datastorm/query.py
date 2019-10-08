@@ -27,7 +27,7 @@ class QueryBuilder:
         self._order.append(field)
         return self
 
-    def only(self, *args: List[str]):
+    def only(self, *args: str):
         return ProjectedQueryBuilder(self._entity_class, filters=self._filters, order=self._order, projection=args)
 
     def get(self, key: Union[Key, str]):
@@ -71,7 +71,8 @@ class QueryBuilder:
         entity = self._entity_class(key)
         for datastore_field_name, serialized_data in attr_data.items():
             datastorm_field_name = entity._datastorm_mapper.resolve_datastore_alias(datastore_field_name)
-            entity.set(datastorm_field_name, entity._datastorm_mapper.get_field(datastorm_field_name).loads(serialized_data))
+            entity.set(datastorm_field_name,
+                       entity._datastorm_mapper.get_field(datastorm_field_name).loads(serialized_data))
         return entity
 
     def __repr__(self):
@@ -83,10 +84,10 @@ class ProjectedQueryBuilder(QueryBuilder):
 
     def __init__(self, entity_class, filters=None, order=None, projection=None):
         super(ProjectedQueryBuilder, self).__init__(entity_class, filters=filters, order=order)
-        self.__projection = projection or []
+        self._projection = projection or []
 
     def only(self, *args: List[str]):
-        self.__projection += args
+        self._projection += args
         return self
 
     def _make_entity_instance(self, key: Key, attr_data: dict):
@@ -102,8 +103,8 @@ class ProjectedQueryBuilder(QueryBuilder):
         if self._order:
             query.order = self._order
 
-        if self.__projection:
-            query.projection = self.__projection
+        if self._projection:
+            query.projection = self._projection
 
         cursor = None
         while True:

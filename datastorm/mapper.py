@@ -7,7 +7,7 @@ class FieldMapper:
 
     def __init__(self):
         self.__mappings: Dict[str, BaseField] = {}
-        self.__datastore_mappings : Dict[str, str] = {}
+        self.__datastore_mappings: Dict[str, str] = {}
 
     def get_field(self, field_name: str) -> BaseField:
         field_name = self.__datastore_mappings.get(field_name, field_name)

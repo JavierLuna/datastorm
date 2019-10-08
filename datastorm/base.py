@@ -3,7 +3,10 @@ from typing import Any
 
 
 class FieldABC(metaclass=ABCMeta):
-    default = lambda: NotImplementedError
+
+    @property
+    def default(self):
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def loads(self, serialized_value: Any) -> Any:
