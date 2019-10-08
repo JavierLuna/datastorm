@@ -9,7 +9,7 @@ jobs:
 
   tests:
     docker:
-        - image: javierluna/datastorm-test-env:255.0.0-3.6.9 
+        - image: javierluna/datastorm-test-env:255.0.0-3.6.9
     steps:
       - checkout
       - run:
@@ -17,10 +17,16 @@ jobs:
           command: |
             python3 -m venv env
             . env/bin/activate
-            pip install pipenv
-            pipenv install --dev --ignore-pipfile
+            pip install poetry
+            make dependencies
       - run:
           name: Run tests
           command: |
             . env/bin/activate
             make tests
+
+      - run:
+          name: Lint code
+          command: |
+            . env/bin/activate
+            make lint-code

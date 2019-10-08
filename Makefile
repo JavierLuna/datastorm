@@ -34,9 +34,13 @@ coverage:
 
 # Static analysis
 
-lint:
+lint-code:
 	poetry run flake8 datastorm --max-line-length=120
+
+lint-tests:
 	poetry run flake8 tests --max-line-length=120
+
+lint: lint-code lint-tests
 
 # Docs
 
