@@ -2,7 +2,7 @@ import operator
 
 import pytest
 
-from datastorm.fields import BaseField, AnyField
+from datastorm.fields import AnyField
 
 
 @pytest.fixture
@@ -39,14 +39,14 @@ def test_no_enforce_variable_no_checks_variable_type(mocker, field):
 def test_enforce_variable_incorrect_type_raises_value_error(mocker, field):
     mocker.patch('datastorm.fields.AnyField.check_type', return_value=False)
     field = field(enforce_type=True)
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError):
         field.dumps("test")
 
 
 def test_enforce_variable_incorrect_comparison_raises_value_error(mocker, field):
     mocker.patch('datastorm.fields.AnyField.check_type', return_value=False)
     field = field(enforce_type=True)
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError):
         field == "test"
 
 

@@ -26,3 +26,9 @@ def ds_entity(datastorm_client):
     yield TestEntity1
 
     [entity.delete() for entity in TestEntity1.query.all()]
+
+
+@pytest.fixture
+def uuid_gen():
+    import uuid
+    return lambda: str(uuid.uuid4())

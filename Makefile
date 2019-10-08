@@ -21,11 +21,11 @@ e2e-tests:
 	poetry run py.test tests/e2e
 
 
-legacy-tests: export DATASTORE_EMULATOR_HOST=0.0.0.0:8081
-legacy-tests:
-	poetry run py.test tests/legacy
+smoke-tests: export DATASTORE_EMULATOR_HOST=0.0.0.0:8081
+smoke-tests:
+	poetry run py.test tests/smoke
 
-tests: unit-tests integration-tests legacy-tests e2e-tests
+tests: unit-tests integration-tests smoke-tests e2e-tests
 
 coverage:  export DATASTORE_EMULATOR_HOST=0.0.0.0:8081
 coverage:
