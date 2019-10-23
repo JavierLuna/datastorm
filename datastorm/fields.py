@@ -33,19 +33,19 @@ class BaseField(FieldABC):
                 "Comparing field {} with '{}' of type {}".format(self.__class__.__name__, other, type(other)))
         return Filter(self.field_name, op, other)
 
-    def __eq__(self, other: Union[str, int, float, bool]) -> Filter:
+    def __eq__(self, other: Any) -> Filter:
         return self._generate_filter("=", other)
 
-    def __lt__(self, other: Union[str, int, float, bool]) -> Filter:
+    def __lt__(self, other: Any) -> Filter:
         return self._generate_filter("<", other)
 
-    def __gt__(self, other: Union[str, int, float, bool]) -> Filter:
+    def __gt__(self, other: Any) -> Filter:
         return self._generate_filter(">", other)
 
-    def __le__(self, other: Union[str, int, float, bool]) -> Filter:
+    def __le__(self, other: Any) -> Filter:
         return self._generate_filter("<=", other)
 
-    def __ge__(self, other: Union[str, int, float, bool]) -> Filter:
+    def __ge__(self, other: Any) -> Filter:
         return self._generate_filter(">=", other)
 
     def __repr__(self):
