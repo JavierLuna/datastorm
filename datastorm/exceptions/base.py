@@ -1,0 +1,2 @@
+class DatastormException(Exception):
+    pass

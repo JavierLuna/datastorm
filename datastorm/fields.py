@@ -23,41 +23,40 @@ class BaseField(FieldABC):
     def _dumps(cls, value) -> Any:
         return value
 
-    def check_type(self, value) -> bool:
-        return True
-
     @property
     def default(self):
         return self._default()
 
-    def _generate_filter(self, op: str, other: Union[str, int, float, bool]):
+    def _generate_filter(self, op: str, other: Union[str, int, float, bool]) -> Filter:
         if self.enforce_type and not self.check_type(other):
             raise ValueError(
                 "Comparing field {} with '{}' of type {}".format(self.__class__.__name__, other, type(other)))
         return Filter(self.field_name, op, other)
 
-    def __eq__(self, other: Union[str, int, float, bool]):
+    def __eq__(self, other: Any) -> Filter:
         return self._generate_filter("=", other)
 
-    def __lt__(self, other: Union[str, int, float, bool]):
+    def __lt__(self, other: Any) -> Filter:
         return self._generate_filter("<", other)
 
-    def __gt__(self, other: Union[str, int, float, bool]):
+    def __gt__(self, other: Any) -> Filter:
         return self._generate_filter(">", other)
 
-    def __le__(self, other: Union[str, int, float, bool]):
+    def __le__(self, other: Any) -> Filter:
         return self._generate_filter("<=", other)
 
-    def __ge__(self, other: Union[str, int, float, bool]):
+    def __ge__(self, other: Any) -> Filter:
         return self._generate_filter(">=", other)
 
     def __repr__(self):
         return "< {field_type} name={field_name} >".format(field_type=self.__class__.__name__,
-                                                      field_name=self.field_name)  # pragma: no cover
+                                                           field_name=self.field_name)  # pragma: no cover
 
 
 class AnyField(BaseField):
-    pass
+
+    def check_type(self, value) -> bool:
+        return True
 
 
 class BooleanField(BaseField):

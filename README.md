@@ -1,5 +1,5 @@
 # Datastorm
-![Python versions](https://img.shields.io/badge/Python-3.5%2C%203.6%2C%203.7-green.svg) [![PyPI version](https://badge.fury.io/py/datastorm.svg)](https://badge.fury.io/py/datastorm) [![Documentation Status](https://readthedocs.org/projects/datastorm/badge/?version=latest)](https://datastorm.readthedocs.io/en/latest/?badge=latest) [![CircleCI](https://circleci.com/gh/JavierLuna/datastorm/tree/master.svg?style=svg)](https://circleci.com/gh/JavierLuna/datastorm/tree/master)
+![Python versions](https://img.shields.io/badge/Python-3.6%2C%203.7-green.svg) [![PyPI version](https://badge.fury.io/py/datastorm.svg)](https://badge.fury.io/py/datastorm) [![Documentation Status](https://readthedocs.org/projects/datastorm/badge/?version=latest)](https://datastorm.readthedocs.io/en/latest/?badge=latest) [![CircleCI](https://circleci.com/gh/JavierLuna/datastorm/tree/master.svg?style=svg)](https://circleci.com/gh/JavierLuna/datastorm/tree/master)
 
 ## What is it?
 
