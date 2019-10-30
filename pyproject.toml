@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "datastorm"
-version = "0.0.0a6"
+version = "0.0.0a7"
 homepage = "https://github.com/JavierLuna/datastorm"
 repository = "https://github.com/JavierLuna/datastorm"
 documentation = "https://datastorm.readthedocs.io/en/latest/"
@@ -12,7 +12,6 @@ classifiers= [
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Natural Language :: Spanish',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
