@@ -32,12 +32,12 @@ def test_no_enforce_variable_no_checks_variable_type(mocker):
 def test_enforce_variable_incorrect_type_raises_value_error(mocker):
     mocker.patch('datastorm.fields.AnyField.check_type', return_value=False)
     field = AnyField(enforce_type=True)
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError):
         field.dumps("test")
 
 
 def test_enforce_variable_incorrect_comparison_raises_value_error(mocker):
     mocker.patch('datastorm.fields.AnyField.check_type', return_value=False)
     field = AnyField(enforce_type=True)
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError):
         field == "test"
