@@ -1,5 +1,3 @@
-import pytest
-
 from datastorm.fields import IntField, FloatField, StringField, BooleanField
 
 
@@ -146,7 +144,6 @@ def test_query_get_float_filter_gt_result(ds_entity, uuid_gen):
     ds_entity(uuid_gen, float_field=2.0, uuid_gen=uuid_gen).save()
     result = ds_entity.query.filter(FloatField("float_field") > 1.0).filter(
         StringField("uuid_gen") == uuid_gen).first()
-    results = list(ds_entity.query.all())
     assert result is not None
 
 
@@ -295,7 +292,7 @@ def test_chained_order_and_filters(ds_entity, uuid_gen):
     ds_entity(uuid_gen1, int_field=1, foo=True, uuid_gen=uuid_gen1).save()
     ds_entity(uuid_gen2, int_field=2, foo=True, uuid_gen=uuid_gen2).save()
     results = list(
-        ds_entity.query.order(ds_entity.int_field).filter(BooleanField('foo') == True).all())
+        ds_entity.query.order(ds_entity.int_field).filter(BooleanField('foo') == True).all())  # noqa: E712
 
     assert len(results) == 2
     assert uuid_gen1 == results[0].uuid_gen
@@ -307,7 +304,7 @@ def test_chained_filters_and_order(ds_entity, uuid_gen):
     ds_entity(uuid_gen1, int_field=1, foo=True, uuid_gen=uuid_gen1).save()
     ds_entity(uuid_gen2, int_field=2, foo=True, uuid_gen=uuid_gen2).save()
     results = list(
-        ds_entity.query.filter(BooleanField('foo') == True).order(ds_entity.int_field).all())
+        ds_entity.query.filter(BooleanField('foo') == True).order(ds_entity.int_field).all())  # noqa: E712
     assert len(results) == 2
     assert uuid_gen1 == results[0].uuid_gen
     assert uuid_gen2 == results[1].uuid_gen

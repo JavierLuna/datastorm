@@ -21,6 +21,11 @@ def qbuilder(mocked_entity):
     return QueryBuilder(mocked_entity)
 
 
+@pytest.fixture
+def mocked_query():
+    return Mock()
+
+
 def test_init_kind_is_entity_kind(qbuilder):
     assert qbuilder._entity_class.__kind__ == qbuilder._kind
 
@@ -113,3 +118,67 @@ def test_get_returns_datastorm_mapping(qbuilder, mocker):
     qbuilder._client.get.return_value = Mock()
     qbuilder.get(Key("test", project="test"))
     assert mocked_make_entity.called
+
+
+@pytest.mark.parametrize("n_filters", [0, 1, 4])
+def test_modify_filters_calls_add_filters_n_filters(n_filters, qbuilder, mocked_datastore, mocked_query):
+    qbuilder._filters = [Mock()] * n_filters
+    qbuilder._modify_filters(mocked_query)
+    assert mocked_query.add_filter.call_count == n_filters
+
+
+def test_modify_filters_returns_query(qbuilder, mocked_query):
+    assert qbuilder._modify_filters(mocked_query) is mocked_query
+
+
+def test_modify_order_empty_order(qbuilder, mocked_datastore, mocked_query):
+    qbuilder._order = []
+    mocked_query.order = None
+    qbuilder._modify_order(mocked_query)
+    assert mocked_query.order is None
+
+
+def test_modify_order_ok(qbuilder, mocked_datastore, mocked_query):
+    orders = [1, 2, 3]
+    qbuilder._order = orders
+    qbuilder._modify_order(mocked_query)
+    assert mocked_query.order == orders
+
+
+def test_modify_order_returns_query(qbuilder, mocked_query):
+    assert qbuilder._modify_order(mocked_query) is mocked_query
+
+
+def test_get_query_proxies_datastore_client(qbuilder):
+    qbuilder._get_query(None)
+    assert qbuilder._client.query.called
+
+
+def test_get_query_passes_kind(qbuilder):
+    qbuilder._kind = 123
+    qbuilder._get_query(None)
+    assert qbuilder._client.query.call_args[1]['kind'] == qbuilder._kind
+
+
+def test_get_query_passes_parent_key(qbuilder):
+    parent_key = 'test-parent-key'
+    qbuilder._get_query(parent_key)
+    assert qbuilder._client.query.call_args[1]['ancestor'] == parent_key
+
+
+def test_build_query_calls_modify_orders(qbuilder, mocked_query, mocker):
+    mocker.patch('datastorm.query.QueryBuilder._modify_filters')
+    mocked_modify_orders = mocker.patch('datastorm.query.QueryBuilder._modify_order')
+    qbuilder._build_query(Mock())
+    assert mocked_modify_orders.called
+
+
+def test_build_query_calls_modify_filters(qbuilder, mocked_query, mocker):
+    mocked_modify_filters = mocker.patch('datastorm.query.QueryBuilder._modify_filters')
+    mocker.patch('datastorm.query.QueryBuilder._modify_order')
+    qbuilder._build_query(Mock())
+    assert mocked_modify_filters.called
+
+
+def test_build_query_returns_query(qbuilder, mocked_query):
+    assert qbuilder._build_query(mocked_query) is mocked_query

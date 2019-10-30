@@ -39,11 +39,8 @@ class QueryBuilder:
 
     def all(self, page_size: int = 500, parent_key: Key = None):
 
-        query = self._client.query(kind=self._kind, ancestor=parent_key)
-        [query.add_filter(filter.item, filter.op, filter.value) for filter in self._filters]
-
-        if self._order:
-            query.order = self._order
+        query = self._get_query(parent_key)
+        query = self._build_query(query)
 
         cursor = None
         while True:
@@ -55,6 +52,24 @@ class QueryBuilder:
             cursor = query_iter.next_page_token
             if not cursor or last_yielded_entity is None:
                 break
+
+    def _modify_filters(self, query):
+        [query.add_filter(filter.item, filter.op, filter.value) for filter in self._filters]
+        return query
+
+    def _modify_order(self, query):
+        if self._order:
+            query.order = self._order
+        return query
+
+    def _get_query(self, parent_key: Key):
+        query = self._client.query(kind=self._kind, ancestor=parent_key)
+        return query
+
+    def _build_query(self, query):
+        query = self._modify_filters(query)
+        query = self._modify_order(query)
+        return query
 
     def first(self):
         result = None
@@ -95,24 +110,12 @@ class ProjectedQueryBuilder(QueryBuilder):
         entity.update(attr_data)
         return entity
 
-    def all(self, page_size: int = 500, parent_key: Key = None):
-
-        query = self._client.query(kind=self._kind, ancestor=parent_key)
-        [query.add_filter(filter.item, filter.op, filter.value) for filter in self._filters]
-
-        if self._order:
-            query.order = self._order
-
+    def _modify_projection(self, query):
         if self._projection:
             query.projection = self._projection
+        return query
 
-        cursor = None
-        while True:
-            last_yielded_entity = None
-            query_iter = query.fetch(start_cursor=cursor, limit=page_size)
-            for raw_entity in query_iter:
-                last_yielded_entity = self._make_entity_instance(raw_entity.key, raw_entity)
-                yield last_yielded_entity
-            cursor = query_iter.next_page_token
-            if not cursor or last_yielded_entity is None:
-                break
+    def _build_query(self, query):
+        query = super()._build_query(query)
+        query = self._modify_projection(query)
+        return query
