@@ -4,6 +4,8 @@ import pytest
 from google.cloud import datastore
 
 from datastorm import DataStorm
+from datastorm.exceptions.datastore import BatchSizeLimitExceeded
+from datastorm.limits.batching import MAX_BATCH_SIZE
 
 
 @pytest.fixture
@@ -32,11 +34,32 @@ def test_datastorm_client_proxies_gcp_datastore_client_supplied_project_id(datas
     assert datastorm_client.client.project == mock_project_id
 
 
-def test_save_multi_proxies_gcp_datastore_put_multi(datastorm_client, mocked_datastore):
+@pytest.mark.parametrize("n_entities, batch_size, n_save_multi_calls", [(1, 1, 1),
+                                                                        (2, 1, 2),
+                                                                        (1, 2, 1),
+                                                                        (500, 500, 1),
+                                                                        (2, 500, 1)])
+def test_save_multi_proxies_gcp_datastore_put_multi(datastorm_client, mocked_datastore, n_entities, batch_size,
+                                                    n_save_multi_calls):
+    mocked_put_multi = Mock()
+    mocked_entity = Mock()
+    mocked_datastore.put_multi = mocked_put_multi
+    datastorm_client.save_multi([mocked_entity] * n_entities, batch_size=batch_size)
+    assert datastorm_client.client.put_multi.call_count == n_save_multi_calls
+
+
+def test_save_multi_raises_value_error_batch_size_zero(datastorm_client, mocked_datastore):
     mocked_put_multi = Mock()
     mocked_datastore.put_multi = mocked_put_multi
-    datastorm_client.save_multi([])
-    assert datastorm_client.client.put_multi.called
+    with pytest.raises(ValueError):
+        datastorm_client.save_multi([], batch_size=0)
+
+
+def test_save_multi_raises_size_limit_exceeded(datastorm_client, mocked_datastore):
+    mocked_put_multi = Mock()
+    mocked_datastore.put_multi = mocked_put_multi
+    with pytest.raises(BatchSizeLimitExceeded):
+        datastorm_client.save_multi([], batch_size=MAX_BATCH_SIZE + 1)
 
 
 def test_save_multi_converts_datastore_entities(datastorm_client, mocked_datastore):

@@ -5,6 +5,9 @@ from google.cloud import datastore
 from google.cloud.datastore import Key
 
 from datastorm.entity import BaseEntity, AbstractDSEntity
+from datastorm.exceptions.datastore import BatchSizeLimitExceeded
+from datastorm.limits.batching import MAX_BATCH_SIZE
+from datastorm.utils.batching import split_batches
 
 
 class DataStorm:
@@ -24,8 +27,14 @@ class DataStorm:
     def DSEntity(self):
         return AbstractDSEntity("DSEntity", (BaseEntity,), {'__kind__': None, '_datastore_client': self.client})
 
-    def save_multi(self, entities: List[BaseEntity]):
-        self.client.put_multi([entity.get_datastore_entity() for entity in entities])
+    def save_multi(self, entities: List[BaseEntity], batch_size: int = MAX_BATCH_SIZE):
+        if batch_size < 1:
+            raise ValueError("Batch size must be greater than 0")
+        if MAX_BATCH_SIZE < batch_size:
+            raise BatchSizeLimitExceeded(batch_size)
+
+        for entity_batch in split_batches(entities, batch_size):
+            self.client.put_multi([entity.get_datastore_entity() for entity in entity_batch])
 
     def generate_key(self, kind: str, identifier: str, parent_key: Key = None):
         return self.client.key(kind, identifier, parent=parent_key)
