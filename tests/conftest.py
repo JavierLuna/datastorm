@@ -5,13 +5,13 @@ from datastorm import DataStorm, fields
 
 
 @pytest.fixture(scope='session')
-def test_project_id():
+def mock_project_id():
     return "datastorm-test-env"
 
 
-@pytest.fixture(scope='session')
-def datastorm_client(test_project_id):
-    return DataStorm(test_project_id, credentials=AnonymousCredentials())
+@pytest.fixture()
+def datastorm_client(mock_project_id):
+    return DataStorm(mock_project_id, credentials=AnonymousCredentials())
 
 
 @pytest.fixture
@@ -26,3 +26,9 @@ def ds_entity(datastorm_client):
     yield TestEntity1
 
     [entity.delete() for entity in TestEntity1.query.all()]
+
+
+@pytest.fixture
+def uuid_gen():
+    import uuid
+    return lambda: str(uuid.uuid4())

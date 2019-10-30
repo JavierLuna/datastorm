@@ -14,3 +14,7 @@ def test_check_type_list_ok(field):
 
 def test_check_type_no_list_ko(field):
     assert not field.check_type("test")
+
+
+def test_default_is_empty_list(field):
+    assert field.default == []

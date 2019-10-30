@@ -44,7 +44,6 @@ class BaseEntity:
         if field_name not in self._datastorm_mapper.fields:
             self._datastorm_mapper.set_field(field_name, self._datastorm_mapper.get_field(field_name))
 
-
         setattr(self, field_name, value)
 
     def _map_field(self, field_name: str, field: Union[BaseField, type]):

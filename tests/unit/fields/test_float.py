@@ -18,3 +18,7 @@ def test_check_type_no_float_ko(field):
 
 def test_dumps_floats(field):
     assert type(field.dumps(1)) is float
+
+
+def test_default_is_float_zero(field):
+    assert field.default == 0.0

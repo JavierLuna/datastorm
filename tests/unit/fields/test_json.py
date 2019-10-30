@@ -25,3 +25,7 @@ def test_dumps_json_str(field, value):
 @pytest.mark.parametrize("value", [bool(), int(), str(), dict(), list()])
 def test_dumps_loads_same_value(field, value):
     assert field.loads(field.dumps(value)) == value
+
+
+def test_default_is_empty_dict(field):
+    assert field.default == {}
