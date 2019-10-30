@@ -39,7 +39,12 @@ There'll be times when you'd need to save a batch of Datastorm instances:
 datastorm.save_multi([orange, strawberry, blueberry])
 ```
 
-And that's it!
+Datastorm will automatically batch your entity list to comply with  [Datastore's batch size limit](https://cloud.google.com/datastore/docs/concepts/limits).
+You can specify the batch size using the `batch_size` parameter, which defaults to `500` (the maximum allowed by Datastore).
+
+```python
+datastorm.save_multi([orange, strawberry, blueberry], batch_size=2) # Will save in two batches
+```
 
 
 ## Generate entity key
