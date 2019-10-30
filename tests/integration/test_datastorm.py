@@ -2,6 +2,8 @@ import uuid
 
 import pytest
 
+from datastorm.limits.batching import MAX_BATCH_SIZE
+
 
 @pytest.fixture
 def uuid_gen():
@@ -38,4 +40,9 @@ def test_create_entity_no_kind_ko(datastorm_client, uuid_gen, ds_entity):
 
 def test_save_multi_ok(datastorm_client, uuid_gen, ds_entity):
     entity_batch = [ds_entity(uuid_gen()) for _ in range(100)]
+    datastorm_client.save_multi(entity_batch)
+
+
+def test_save_multi_auto_batches(datastorm_client, uuid_gen, ds_entity):
+    entity_batch = [ds_entity(uuid_gen()) for _ in range(MAX_BATCH_SIZE + 100)]
     datastorm_client.save_multi(entity_batch)
