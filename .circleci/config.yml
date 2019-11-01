@@ -32,6 +32,7 @@ jobs:
           - checkout
           - run:
               name: Install dependencies
+              command: |
               python3 -m venv env
               . env/bin/activate
               pip install poetry
