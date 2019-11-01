@@ -28,6 +28,8 @@ jobs:
             make tests
 
   static-analysis:
+      docker:
+          - image: circleci/python:3.6
       steps:
           - checkout
           - run:
