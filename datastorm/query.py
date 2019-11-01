@@ -22,12 +22,12 @@ class QueryBuilder:
         return self
 
     def order(self, field: Union[BaseField, str], inverted: bool = False):
-        field = field.field_name if isinstance(field, BaseField) else field
-        field = "-" + field if inverted else field
-        self._order.append(field)
+        order_field = field.field_name if isinstance(field, BaseField) else field
+        order_field = "-" + order_field if inverted else order_field  # type: ignore
+        self._order.append(order_field)
         return self
 
-    def only(self, *args: str):
+    def only(self, *args: List[str]):
         return ProjectedQueryBuilder(self._entity_class, filters=self._filters, order=self._order, projection=args)
 
     def get(self, key: Union[Key, str]):
