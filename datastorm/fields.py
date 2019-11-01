@@ -1,12 +1,13 @@
 import json
-from typing import Union, Any
+from typing import Union, Any, Optional, Callable
 from datastorm.filter import Filter
 from datastorm.base import FieldABC
 
 
 class BaseField(FieldABC):
 
-    def __init__(self, field_name: str = None, enforce_type=False, default=None):
+    def __init__(self, field_name: Optional[str] = None, enforce_type: bool = False,
+                 default: Optional[Union[Any, Callable]] = None):
         self.field_name = field_name
         self.enforce_type = enforce_type
         self._default = default if callable(default) else lambda: default
@@ -31,9 +32,9 @@ class BaseField(FieldABC):
         if self.enforce_type and not self.check_type(other):
             raise ValueError(
                 "Comparing field {} with '{}' of type {}".format(self.__class__.__name__, other, type(other)))
-        return Filter(self.field_name, op, other)
+        return Filter(self.field_name, op, other)  # type: ignore
 
-    def __eq__(self, other: Any) -> Filter:
+    def __eq__(self, other: Any) -> Filter:  # type: ignore
         return self._generate_filter("=", other)
 
     def __lt__(self, other: Any) -> Filter:

@@ -1,10 +1,11 @@
 import inspect
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List, Type
 
 from google.cloud import datastore
 from google.cloud.datastore import Key
 
 from datastorm.fields import BaseField
+from datastorm.filter import Filter
 from datastorm.mapper import FieldMapper
 from datastorm.query import QueryBuilder
 
@@ -23,8 +24,8 @@ class AbstractDSEntity(type):
 
 
 class BaseEntity:
-    __kind__ = None
-    __base_filters__ = []
+    __kind__: str = None  # type: ignore
+    __base_filters__: List[Filter] = []
 
     _datastore_client = None
 
@@ -38,7 +39,7 @@ class BaseEntity:
     def save(self):
         self._datastore_client.put(self.get_datastore_entity())
 
-    def set(self, field_name: str, value: Any, field: BaseField = None):
+    def set(self, field_name: str, value: Any, field: Optional[BaseField] = None):
         if field:
             self._map_field(field_name, field)
         if field_name not in self._datastorm_mapper.fields:
@@ -46,9 +47,9 @@ class BaseEntity:
 
         setattr(self, field_name, value)
 
-    def _map_field(self, field_name: str, field: Union[BaseField, type]):
-        field = field() if inspect.isclass(field) else field
-        self._datastorm_mapper.set_field(field_name, field)
+    def _map_field(self, field_name: str, field: Union[BaseField, Type[BaseField]]):
+        field_instance = field() if inspect.isclass(field) else field  # type: ignore
+        self._datastorm_mapper.set_field(field_name, field_instance)  # type: ignore
 
     def sync(self):
         buffer = self.get_datastore_entity()
@@ -63,7 +64,7 @@ class BaseEntity:
 
     @classmethod
     def generate_key(cls, identifier: str, parent_key: Optional[Key] = None):
-        return cls._datastore_client.key(cls.__kind__, identifier, parent=parent_key)
+        return cls._datastore_client.key(cls.__kind__, identifier, parent=parent_key)  # type: ignore
 
     def get_datastore_entity(self):
         entity = datastore.Entity(key=self.key)
