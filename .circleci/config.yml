@@ -5,6 +5,8 @@ workflows:
     jobs:
       - tests:
           name: Run all tests under emulator
+      - static-analysis:
+          name: Run linting and type hinting checks
 jobs:
 
   tests:
@@ -25,8 +27,22 @@ jobs:
             . env/bin/activate
             make tests
 
-      - run:
-          name: Lint code
-          command: |
-            . env/bin/activate
-            make lint-code
+  static-analysis:
+      steps:
+          - checkout
+          - run:
+              name: Install dependencies
+              python3 -m venv env
+              . env/bin/activate
+              pip install poetry
+              make dependencies
+          - run:
+              name: Linting
+              command: |
+                . env/bin/activate
+                make lint
+          - run:
+              name: Type hinting
+              command: |
+                . env/bin/activate
+                make type-check
