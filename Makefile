@@ -62,6 +62,8 @@ build: tests lint
 publish: build
 	poetry publish
 
+bump-version:
+	poetry run bump2version build
 
 # Docker
 
