@@ -62,7 +62,12 @@ build: tests lint
 publish: build
 	poetry publish
 
-bump-version:
+# CI
+
+ci-publish:
+	poetry publish --build --username "${PYPI_USERNAME}" --password "${PYPI_PASSWORD}" --no-interaction
+
+ci-bump-version:
 	poetry run bump2version build
 
 # Docker
