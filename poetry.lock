@@ -26,6 +26,14 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "19.2.0"
 
 [[package]]
+category = "dev"
+description = "Version-bump your software with a single command!"
+name = "bump2version"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "0.5.11"
+
+[[package]]
 category = "main"
 description = "Extensible memoizing collections and decorators"
 name = "cachetools"
@@ -515,13 +523,14 @@ version = "0.6.0"
 more-itertools = "*"
 
 [metadata]
-content-hash = "7cf63ec230bf6b351bbdcd35cbc6301154039708247526c4a578f47639b1e739"
+content-hash = "b04ac60a5ebce3be1ebc376c85c532fa12b4bf1f6a3c30b40bc111942f159e1e"
 python-versions = "^3.6"
 
 [metadata.hashes]
 "aspy.yaml" = ["463372c043f70160a9ec950c3f1e4c3a82db5fca01d334b6bc89c7164d744bdc", "e7c742382eff2caed61f87a39d13f99109088e5e93f04d76eb8d4b28aa143f45"]
 atomicwrites = ["03472c30eb2c5d1ba9227e4c2ca66ab8287fbfbbda3888aa93dc2e28fc6811b4", "75a9445bac02d8d058d5e1fe689654ba5a6556a1dfd8ce6ec55a0ed79866cfa6"]
 attrs = ["ec20e7a4825331c1b5ebf261d111e16fa9612c1f7a5e1f884f12bd53a664dfd2", "f913492e1663d3c36f502e5e9ba6cd13cf19d7fab50aa13239e420fef95e1396"]
+bump2version = ["524bde030318fe2543038defe0f77739605636fef96924883813cb290cf79c1e", "bfcc051498dda9fd9ac8634689f4516e1c20fdeeace3278932cc6e1248418b36"]
 cachetools = ["428266a1c0d36dc5aca63a2d7c5942e88c2c898d72139fca0e97fdd2380517ae", "8ea2d3ce97850f31e4a08b0e2b5e6c34997d7216a9d2c98e0f3978630d4da69a"]
 certifi = ["e4f3620cfea4f83eedc95b24abd9cd56f3c4b146dd0177e83a21b4eb49e21e50", "fd7c7c74727ddcf00e9acd26bba8da604ffec95bf1c2144e67aff7a8b50e6cef"]
 cfgv = ["edb387943b665bf9c434f717bf630fa78aecd53d5900d2e05da6ad6048553144", "fbd93c9ab0a523bf7daec408f3be2ed99a980e20b2d19b50fc184ca6b820d289"]
