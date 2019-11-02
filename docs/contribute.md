@@ -37,24 +37,13 @@ Docker is preferred, as the `Makefile` has targets to run the tests under a dock
 
 ### Git workflow
 
-#### Repository branches
+This repository follows a modified [Github workflow](https://guides.github.com/introduction/flow/).
 
-This repository has two main branches:
-* `master`: Latest stable version released.
-* `develop`: Latest version released, including pre-releases.
+Differences:
+* Branches will follow the naming: `DS-<issue id>-short-descriptive-name`. Example: `DS-11-pytests`
+* Releases will happen when a `0.0.0a0` tag is pushed. This tag will be created manually by the project administrator.
 
-**Note:** At the moment, no stable version has been released, so master and develop are being used as "latest version released" and "next version" respectively.
-
-#### Branch naming
-
-Please, create a separate branch to do your work, no important how little it'd be.
-Use the following naming:
-
-* **Features**: `feature/DS-<issue id>-<issue keywords>`. Example: `feature/DS-11-pytests`
-* **Bugs**: `bug/DS-<issue id>-<issue keyworkds>`. Example: `bug/DS-14-list-dict-serialization`
-
-
-Please branch from `develop` and target your PR to `develop` as well.
+**Note:** The `0.0.0a0` will be active until it is decided to abandon the alpha state, then it will be `0.0.0`.
 
 #### Commits
 
